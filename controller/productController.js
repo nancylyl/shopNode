@@ -6,6 +6,9 @@ const userController = {
     getProductDetail(res, resp) {
         dao.getProductDetail(res, resp);
 
+    },
+    getProductList(res, resp) {
+        dao.getProductList(res, resp)
     }
 }
 module.exports = userController;
