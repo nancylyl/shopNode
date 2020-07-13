@@ -9,6 +9,10 @@ const userController = {
     },
     getProductList(res, resp) {
         dao.getProductList(res, resp)
+    },
+    //根据关键字获取产品信息
+    getProductListByKey(res, resp) {
+        dao.getProductListByKey(res, resp)
     }
 }
 module.exports = userController;

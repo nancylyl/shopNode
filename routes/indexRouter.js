@@ -20,6 +20,11 @@ router.get("/getIndex.do", indexController.getIndex)
 // router.post("/stu/index.do", indexController.getIndex);
 router.get("/getProductDetail.do", productController.getProductDetail);
 router.get("/getProductList.do", productController.getProductList);
+router.get("/getProductListByKey.do", productController.getProductListByKey);
+
+
+
+//菜单栏信息
 router.get("/getMenu.do", commonController.getMenu);
 
 

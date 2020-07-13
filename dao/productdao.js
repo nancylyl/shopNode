@@ -51,6 +51,27 @@ const indexdao = {
         });
 
     },
+    getProductListByKey(req, resp) {
+
+        let key = req.query.key;
+        let sql = "select Pro_Id,Pro_Name from S_Product where Pro_Name like '%" + key + "%' limit 0,15";
+        db.connect(sql, [], (err, data) => {
+            result = new Result();
+            if (err == null) {
+                result.data = data; //列表显示条数
+                result.success = true; //返回成功
+                result.message = "查询成功！" //成功描述
+
+                resp.send(result)
+            } else {
+                console.log(err);
+                result.message = "查询失败！"
+                resp.send(result)
+
+            }
+
+        });
+    }
 
 }
 module.exports = indexdao;
