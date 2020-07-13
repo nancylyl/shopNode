@@ -19,7 +19,7 @@ router.get("/getIndex.do", indexController.getIndex)
 //获取首页信息
 // router.post("/stu/index.do", indexController.getIndex);
 router.get("/getProductDetail.do", productController.getProductDetail);
-router.get("/getProductList.do", productController.getProductList);
+router.post("/getProductList.do", productController.getProductList);
 router.get("/getProductListByKey.do", productController.getProductListByKey);
 
 
