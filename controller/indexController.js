@@ -1,6 +1,6 @@
 const db = require("../config/dbpoolconfig");
 const dao = require("../dao/indexdao");
-const result = require("../config/ActionResult")();
+// const result = require("../config/ActionResult")();
 const indexController = {
 
     getIndex(req, resp) {

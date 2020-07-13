@@ -7,7 +7,8 @@ const dbpool = {
         port: "3306",
         user: "root",
         password: "123456",
-        database: "studentsystem"
+        database: "shopmanage",
+        multipleStatements: true
     },
     create() {
         this.pool = mysql.createPool(this.config) //创建连接池
@@ -18,7 +19,18 @@ const dbpool = {
             connection.query(sql, arr, fn);
             connection.release();
         })
+    },
+    connectPage(sql, arr, pageCount, currentPage, fn) {
+        this.pool.getConnection((err, connection) => {
+
+            var start = (currentPage - 1) * pageCount;
+            var newsql = 'select count(*) count from (' + sql + ') a;SELECT * FROM (' + sql + ')  a limit ' + start + ',' + pageCount + ';'
+            connection.query(newsql, arr, fn);
+            //    console.log(newsql);
+            connection.release();
+        })
     }
+
 
 };
 dbpool.create();
