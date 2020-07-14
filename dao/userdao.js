@@ -81,7 +81,24 @@ const indexdao = {
 
             }
         });
-
+    },
+    updataUserInfo(req, resp) {
+        const Name = req.body.Name;
+        const sex = req.body.sex;
+        const Birthday = req.body.Birthday;
+        const Code = req.body.Code;
+        const UId = 1;
+        let sql = ` UPDATE  S_UserInfo SET NAME='${Name}' ,sex=${sex} ,Birthday='${Birthday}',CODE='${Code}' WHERE UId=${UId} `
+        console.log(sql);
+        db.connect(sql, [], (err, data) => {
+            result = new Result();
+            if (err == null) {
+                result.success = true; //返回成功
+                // result.data = data;
+                result.message = "修改成" //成功描述
+                resp.send(result)
+            }
+        });
     }
 }
 module.exports = indexdao;
