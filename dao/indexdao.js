@@ -1,16 +1,20 @@
 const db = require("../config/dbpoolconfig");
 const Result = require("../config/ActionResult");
+const indexdao = {
 
-const commondao = {
-    getMenu(req, resp) {
-        db.connect("SELECT P_Type_Menu_ID AS id ,pname name,parentid pid,sort,url FROM s_product_type_menu WHERE state=0; ", [], (err, data) => {
+    /* 产品列表 需要分页 */
+    getIndex(req, resp) {
+
+        let sql = `SELECT * FROM s_banner;
+        SELECT * FROM s_productpic WHERE isshowindex=1;`
+
+        db.connect(sql, [], (err, data) => {
             result = new Result();
-            //console.log(data);
             if (err == null) {
-                result.data = data; //列表显示条数
+
+                result.data = [data[0], data[1]]; //列表显示条数
                 result.success = true; //返回成功
                 result.message = "查询成功！" //成功描述
-
                 resp.send(result)
 
             } else {
@@ -20,7 +24,8 @@ const commondao = {
             }
 
         });
-    }
+
+    },
 
 }
-module.exports = commondao;
+module.exports = indexdao;
