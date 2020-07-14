@@ -1,6 +1,11 @@
 const db = require("../config/dbpoolconfig");
 const Result = require("../config/ActionResult");
+
+const session = require("express-session");
+const { userinfo = null } = session;
+const UId = 1 //userinfo.UId;
 const indexdao = {
+
     /* 产品详情 */
     getProductDetail(req, resp) {
         console.log(req.query);
@@ -9,15 +14,16 @@ const indexdao = {
         let sql = `SELECT t1.*,t2.pro_data FROM s_product t1 JOIN  
         S_ProDetails t2 ON t1.pro_id=t2.Pro_Id
         WHERE t1.pro_id=${Pro_Id};
-        
-        
+       SELECT * FROM S_ProductPic WHERE Pro_Id=${Pro_Id};
         SELECT t1.*,t2.Url FROM S_CommentDetail t1 
         LEFT JOIN S_CommentImage t2 ON t1.CId=t2.CId
-        WHERE t1.Pid=${Pro_Id};;`;
+        WHERE t1.Pid=${Pro_Id};`;
         db.connect(sql, [], (err, data) => {
             result = new Result();
             if (err == null) {
                 result.data = data; //列表显示条数
+                // console.log(data);
+
                 result.success = true; //返回成功
                 result.message = "查询成功！" //成功描述
 
@@ -83,7 +89,7 @@ const indexdao = {
             }
             try {
                 if (P_Type_Menu_Id != undefined && P_Type_Menu_Id > 0) {
-                    where += ` and P_Type_Menu_Id=${P_Type_Menu_Id}`;
+                    where += ` and (P_Type_Menu_Id=${P_Type_Menu_Id} or P_Type_Menu_ParentId =(${P_Type_Menu_Id})) `;
                 }
 
             } catch (error) {
@@ -171,18 +177,14 @@ const indexdao = {
     getHotProduct(req, resp) {
         let sql = `SELECT  * FROM (
             SELECT DISTINCT t1.Pro_Id,t1.Pro_Name,t1.Price,t2.Pro_Url,(t1.Pro_SumCount-t1.Pro_NewCount)counts 
-            
             FROM S_Product  t1 
-            
             JOIN (
-            
             SELECT Pro_Url,Pro_Id FROM  S_ProductPic  WHERE id IN(
-            SELECT MIN(id) id FROM S_ProductPic WHERE TYPE=2 GROUP BY
+            SELECT MIN(id) id FROM S_ProductPic WHERE TYPE=3 GROUP BY
             pro_id )
             ) t2 ON t1.Pro_Id=t2.Pro_Id 
             ORDER BY  counts DESC  ) t1 LIMIT 0,10
-               
-               `;
+                `;
 
         db.connect(sql, [], (err, data) => {
             result = new Result();
@@ -201,6 +203,42 @@ const indexdao = {
 
         });
 
+
+    },
+    /* 我的订单 */
+    getMyOder(req, resp) {
+        //console.log(UId);
+        let sql = `
+        SELECT '新用户' userTypeName ,NAME,
+        (SELECT IFNULL(SUM(IFNULL(Num,0)*IFNULL(Price,0) ),0)  FROM s_orderdetail WHERE UId=t1.UId) totalMoney
+         FROM S_UserInfo t1 WHERE t1.UId=${UId};
+         
+        SELECT  t1.*,t2.Pro_Url FROM s_orderdetail t1
+        JOIN 
+        (
+        SELECT * FROM S_ProductPic WHERE id IN(
+        SELECT MIN(id) FROM S_ProductPic WHERE TYPE=3 GROUP BY Pro_Id
+        )
+        ) 
+        t2 ON t1.PId=t2.Pro_Id
+          WHERE Uid=${UId} `;
+        console.log(sql);
+        db.connect(sql, [], (err, data) => {
+            result = new Result();
+            if (err == null) {
+                result.data = data; //列表显示条数
+                result.success = true; //返回成功
+                result.message = "查询成功！" //成功描述
+
+                resp.send(result)
+            } else {
+                console.log(err);
+                result.message = "查询失败！"
+                resp.send(result)
+
+            }
+
+        });
 
     }
 

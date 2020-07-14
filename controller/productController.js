@@ -16,6 +16,9 @@ const userController = {
     },
     getHotProduct(res, resp) {
         dao.getHotProduct(res, resp);
+    },
+    getMyOder(res, resp) {
+        dao.getMyOder(res, resp);
     }
 
 }

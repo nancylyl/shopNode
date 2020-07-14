@@ -20,6 +20,26 @@ const commondao = {
             }
 
         });
+    },
+    //银行卡信息
+    getPayBy(req, resp) {
+        db.connect(" SELECT * FROM S_PayBy ", [], (err, data) => {
+            result = new Result();
+            //console.log(data);
+            if (err == null) {
+                result.data = data; //列表显示条数
+                result.success = true; //返回成功
+                result.message = "查询成功！" //成功描述
+
+                resp.send(result)
+
+            } else {
+                result.success = false;
+                result.message = "查询失败！"
+                resp.send(result)
+            }
+
+        });
     }
 
 }
