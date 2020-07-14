@@ -13,6 +13,10 @@ const userController = {
     //根据关键字获取产品信息
     getProductListByKey(res, resp) {
         dao.getProductListByKey(res, resp)
+    },
+    getHotProduct(res, resp) {
+        dao.getHotProduct(res, resp);
     }
+
 }
 module.exports = userController;

@@ -5,7 +5,7 @@ const commondao = {
     getMenu(req, resp) {
         db.connect("SELECT P_Type_Menu_ID AS id ,pname name,parentid pid,sort,url FROM s_product_type_menu WHERE state=0; ", [], (err, data) => {
             result = new Result();
-            // console.log(result);
+            //console.log(data);
             if (err == null) {
                 result.data = data; //列表显示条数
                 result.success = true; //返回成功
