@@ -20,7 +20,18 @@ const userController = {
         },
         updataPass(res, resp) {
             dao.updataPass(res, resp);
-        }
+        },
+        getComment(res, resp) {
+            dao.getComment(res, resp);
+        },
+        updataUserINV(res, resp) {
+            dao.updataUserINV(res, resp);
+        },
+        getMyMessage(res, resp) {
+            dao.getMyMessage(res, resp);
+        },
+
+
     }
     //登录
 
