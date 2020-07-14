@@ -14,6 +14,12 @@ const userController = {
         },
         getUserInfo(res, resp) {
             dao.getUserInfo(res, resp)
+        },
+        updataUserInfo(res, resp) {
+            dao.updataUserInfo(res, resp);
+        },
+        updataPass(res, resp) {
+            dao.updataPass(res, resp);
         }
     }
     //登录
