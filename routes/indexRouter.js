@@ -35,5 +35,6 @@ router.post('/login.do', userController.login)
 router.post('/register.do', userController.register)
 router.get('/getUserInfo.do', userController.getUserInfo)
 router.get('/updataUserInfo.do', userController.updataUserInfo)
+router.get('/updataPass.do', userController.updataPass)
 
 module.exports = router;

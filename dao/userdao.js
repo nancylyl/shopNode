@@ -9,8 +9,7 @@ const indexdao = {
         const Password = req.body.Password;
 
         let sql = `SELECT * FROM  s_userinfo WHERE  account='${Account}' AND PASSWORD='${Password}'`
-        console.log(sql);
-
+            // console.log(sql);
         db.connect(sql, [], (err, data) => {
             result = new Result();
             if (err == null) {
@@ -18,6 +17,8 @@ const indexdao = {
                 if (data.length > 0) {
                     result.success = true; //返回成功
                     result.message = "查询成功！" //成功描述
+                        //  var userinfo = JSON.parse(JSON.stringify(data));
+                        //req.session.userinfo = userinfo[0];
                     resp.send(result)
                 } else {
                     result.success = false; //
@@ -39,9 +40,7 @@ const indexdao = {
     register(req, resp) {
         const Phone = req.body.Phone;
         const Password = req.body.Password;
-
         let sql = `INSERT INTO s_userinfo (Account,PASSWORD,Phone) VALUES('${Phone}','${Password}','${Phone}')`
-
         console.log(sql);
 
         db.connect(sql, [], (err, data) => {
@@ -95,7 +94,22 @@ const indexdao = {
             if (err == null) {
                 result.success = true; //返回成功
                 // result.data = data;
-                result.message = "修改成" //成功描述
+                result.message = "修改成功" //成功描述
+                resp.send(result)
+            }
+        });
+    },
+    updataPass(req, resp) {
+        const PassWord = req.body.PassWord;
+        const UId = 1;
+        let sql = ` UPDATE  S_UserInfo SET PassWord='${PassWord}' WHERE UId=${UId} `
+        console.log(sql);
+        db.connect(sql, [], (err, data) => {
+            result = new Result();
+            if (err == null) {
+                result.success = true; //返回成功
+                // result.data = data;
+                result.message = "修改成功" //成功描述
                 resp.send(result)
             }
         });

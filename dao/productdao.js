@@ -1,6 +1,9 @@
 const db = require("../config/dbpoolconfig");
 const Result = require("../config/ActionResult");
+
+// const { userinfo = null } = session
 const indexdao = {
+
     /* 产品详情 */
     getProductDetail(req, resp) {
         console.log(req.query);
@@ -9,15 +12,16 @@ const indexdao = {
         let sql = `SELECT t1.*,t2.pro_data FROM s_product t1 JOIN  
         S_ProDetails t2 ON t1.pro_id=t2.Pro_Id
         WHERE t1.pro_id=${Pro_Id};
-        
-        
+       SELECT * FROM S_ProductPic WHERE Pro_Id=${Pro_Id};
         SELECT t1.*,t2.Url FROM S_CommentDetail t1 
         LEFT JOIN S_CommentImage t2 ON t1.CId=t2.CId
-        WHERE t1.Pid=${Pro_Id};;`;
+        WHERE t1.Pid=${Pro_Id};`;
         db.connect(sql, [], (err, data) => {
             result = new Result();
             if (err == null) {
                 result.data = data; //列表显示条数
+                // console.log(data);
+
                 result.success = true; //返回成功
                 result.message = "查询成功！" //成功描述
 
