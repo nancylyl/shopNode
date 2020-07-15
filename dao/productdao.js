@@ -9,9 +9,10 @@ const indexdao = {
 
     /* 产品详情 */
     getProductDetail(req, resp) {
-        console.log(req.query);
 
         let Pro_Id = parseInt(req.query.Pro_Id);
+        console.log(req.query,Pro_Id);
+
         let sql = `SELECT t1.*,t2.pro_data FROM s_product t1 JOIN  
         S_ProDetails t2 ON t1.pro_id=t2.Pro_Id
         WHERE t1.pro_id=${Pro_Id};
