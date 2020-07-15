@@ -1,9 +1,10 @@
 const db = require("../config/dbpoolconfig");
 const Result = require("../config/ActionResult");
-
+var date = require("silly-datetime");
 const session = require("express-session");
 const { userinfo = null } = session;
 const UId = 1 //userinfo.UId;
+const UserName = "admin"; //
 const indexdao = {
 
     /* 产品详情 */
@@ -89,13 +90,13 @@ const indexdao = {
             }
             try {
                 if (P_Type_Menu_Id != undefined && P_Type_Menu_Id > 0) {
-                    where += ` and (P_Type_Menu_Id=${P_Type_Menu_Id} or P_Type_Menu_ParentId =(${P_Type_Menu_Id})) `;
+                    //     where += ` and (P_Type_Menu_Id=${P_Type_Menu_Id} or P_Type_Menu_ParentId =${P_Type_Menu_Id}) `;
+                    where += ` and ( P_Type_Menu_ParentId =${P_Type_Menu_Id}) `;
                 }
 
             } catch (error) {
 
             }
-
 
             sql = sql + where;
             if (Sort == 1 || Sort == 2) {
@@ -105,7 +106,7 @@ const indexdao = {
             } else if (Sort == 4) {
                 sql += ' order by Price  desc'
             }
-            // console.log(sql);
+            //y console.log(sql);
             let nowdata = [];
             const that = this;
             db.connectPage(sql, [], PageCount, CurrentPage, async(err, data) => {
@@ -208,6 +209,10 @@ const indexdao = {
     /* 我的订单 */
     getMyOder(req, resp) {
         //console.log(UId);
+        let state = 0;
+        try {
+            state = req.query.State;
+        } catch {}
         let sql = `
         SELECT '新用户' userTypeName ,NAME,
         (SELECT IFNULL(SUM(IFNULL(Num,0)*IFNULL(Price,0) ),0)  FROM s_orderdetail WHERE UId=t1.UId) totalMoney
@@ -222,6 +227,9 @@ const indexdao = {
         ) 
         t2 ON t1.PId=t2.Pro_Id
           WHERE Uid=${UId} `;
+        if (state > 0) {
+            sql += " and t1.state=" + state + ""
+        }
         console.log(sql);
         db.connect(sql, [], (err, data) => {
             result = new Result();
@@ -240,7 +248,150 @@ const indexdao = {
 
         });
 
-    }
+    },
+
+    /* 用户下单 */
+    addOrder(req, resp) {
+        // console.log(req.body);
+        const {
+            PId,
+            Price,
+            Num,
+            Is_Invoic,
+            Invoic_Type,
+            IS_Coupon,
+            Coupon_Id,
+            Is_Gift,
+            Gift_Id,
+            Send_Type,
+            Pay_Type_Id,
+            Address_ID,
+            New_Name,
+            New_Province,
+            New_City,
+            New_Area,
+            New_Address,
+            New_Mail,
+            New_Phone,
+            New_Tel,
+            Deltime
+
+        } = req.body;
+        const data = new Date();
+        const lastdate = +data;
+        let OrderNum = "BMC" + date.format(data, 'YYYYMMDD').toString() + lastdate.toString();
+        let Form_Text = '用户' + UserName + ' 购买商品编号为:' + PId + '； 订单编号为：' + OrderNum
+        let sql = `
+        INSERT INTO shopmanage.s_orderdetail 
+        (
+        OrderNum, 
+        UId, 
+        PId, 
+        Price, 
+        Num, 
+        Is_Invoic, 
+        Invoic_Type, 
+        IS_Coupon, 
+        Coupon_Id, 
+        Is_Gift, 
+        Gift_Id, 
+        Send_Type, 
+        Pay_Type_Id, 
+        Address_ID, 
+        New_Name, 
+        New_Province, 
+        New_City, 
+        New_Area, 
+        New_Address, 
+        New_Mail, 
+        New_Phone, 
+        New_Tel, 
+        Deltime, 
+        Form_Text,  
+        State
+        )
+        VALUES
+        (
+        '${OrderNum}', 
+        ${UId} ,
+        ${PId} ,
+        ${Price}, 
+        ${Num} ,
+        ${Is_Invoic} ,
+        ${Invoic_Type}, 
+        ${IS_Coupon}, 
+        ${Coupon_Id} ,
+        ${Is_Gift} ,
+        ${Gift_Id} ,
+        ${Send_Type} ,
+        ${Pay_Type_Id}, 
+        ${Address_ID}, 
+        '${New_Name}',
+        '${New_Province}',
+        '${New_City}',
+        '${New_Area}',
+        '${New_Address}',
+        '${New_Mail}',
+        '${New_Phone}',
+        '${New_Tel}',
+         ${Deltime} ,
+        '${Form_Text}' ,
+        0
+        );
+    UPDATE 	S_Product SET Pro_NewCount=Pro_NewCount-1 WHERE Pro_Id=${PId} `;
+        console.log(sql);
+        db.connect(sql, [], (err, data) => {
+            result = new Result();
+            if (err == null) {
+                //   result.data = data; //列表显示条数
+                result.success = true; //返回成功
+                result.message = "查询成功！" //成功描述
+
+                resp.send(result)
+            } else {
+                console.log(err);
+                result.message = "查询失败！"
+                resp.send(result)
+
+            }
+
+        });
+
+    },
+
+    /* 修改等待状态 */
+    updateOrderState(req, resp) {
+        //console.log(UId);
+        let state = req.query.state;
+        let orderId = req.query.orderId;
+        let sql;
+        if (state == 1) {
+            let sql = `UPDATE  s_userinfo SET SumScore=SumScore+(
+                SELECT  t2.Score FROM s_orderdetail t1 
+                JOIN s_product t2 ON t2.Pro_Id=t1.PId
+                WHERE t1.id=${orderId})
+                WHERE UId=${UId} ; `;
+        }
+        sql += ` UPDATE s_orderdetail SET state=${state} WHERE id=${orderId} `;
+
+        db.connect(sql, [], (err, data) => {
+            result = new Result();
+            if (err == null) {
+                //  result.data = data; //列表显示条数
+                result.success = true; //返回成功
+                result.message = "操作成功" //成功描述
+
+                resp.send(result)
+            } else {
+                console.log(err);
+                result.message = "查询失败！"
+                resp.send(result)
+
+            }
+
+        });
+
+    },
 
 }
 module.exports = indexdao;

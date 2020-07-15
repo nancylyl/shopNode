@@ -30,7 +30,29 @@ const userController = {
         getMyMessage(res, resp) {
             dao.getMyMessage(res, resp);
         },
+        getMyAddress(res, resp) {
+            dao.getMyAddress(res, resp);
+        },
+        addMyAddress(res, resp) {
+            dao.addMyAddress(res, resp);
 
+        },
+        updateMyAddress(res, resp) {
+            dao.updateMyAddress(res, resp);
+        },
+        delMyAddress(res, resp) {
+            dao.delMyAddress(res, resp);
+
+        },
+        addOrUpdatePayWay(res, resp) {
+            dao.addOrUpdatePayWay(res, resp);
+        },
+        getPayWay(res, resp) {
+            dao.getPayWay(res, resp);
+        },
+        addOrder(res, resp) {
+            dao.addOrder(res, resp);
+        }
 
     }
     //登录

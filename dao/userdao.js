@@ -172,10 +172,8 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
     updataUserINV(req, resp) {
         const InvoiceType = req.body.InvoiceType;
         const Inv_Content = req.body.Inv_Content;
-
-
         let sql = ` UPDATE  S_UserInfo SET InvoiceType='${InvoiceType}' ,Inv_Content=${Inv_Content}  WHERE UId=${UId} `
-        console.log(sql);
+            // console.log(sql);
         db.connect(sql, [], (err, data) => {
             result = new Result();
             if (err == null) {
@@ -218,7 +216,172 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
             }
         });
     },
+    //我的收获地址
+    getMyAddress(req, resp) {
 
+        let sql = ` SELECT * FROM s_address WHERE  UId=${UId} `
+        db.connect(sql, [], (err, data) => {
+            result = new Result();
+            if (err == null) {
+                result.success = true; //返回成功
+                result.data = data;
+                result.message = "" //成功描述
+                resp.send(result)
+            }
+        });
+    },
+    //新增收获地址
+    addMyAddress(req, resp) {
+        const S_Name = req.body.S_Name;
+        const Province = req.body.Province;
+        const City = req.body.City;
+        const Area = req.body.Area;
+        const Address = req.body.Address;
+        const Mail = req.body.Mail;
+        const Phone = req.body.Phone;
+        const Tel = req.body.Tel;
+        const Is_True = req.body.Is_True;
+        let sql;
+        if (Is_True) {
+            sql += `update s_address set Is_True=0 where UId=${UId};`;
+        }
+        sql += ` INSERT INTO s_address 
+                        (
+                        UId, 
+                        S_Name, 
+                        Province, 
+                        City, 
+                        AREA, 
+                        Address, 
+                        Mail, 
+                        Phone, 
+                        Tel, 
+                        Is_True
+                        )
+                        VALUES
+                        (
+                        ${UId}, 
+                        ${S_Name}, 
+                        ${Province}, 
+                        ${City}, 
+                        ${Area}, 
+                        ${Address}, 
+                        ${Mail}, 
+                        ${Phone}, 
+                        ${Tel}, 
+                        ${Is_True}
+                        ); `
+        db.connect(sql, [], (err, data) => {
+            result = new Result();
+            if (err == null) {
+                result.success = true; //返回成功
+                // result.data = data;
+                result.message = "" //成功描述
+                resp.send(result)
+            }
+        });
+    },
+    //修改收获地址
+    updateMyAddress(req, resp) {
+
+        const S_Name = req.body.S_Name;
+        const Province = req.body.Province;
+        const City = req.body.City;
+        const Area = req.body.Area;
+        const Address = req.body.Address;
+        const Mail = req.body.Mail;
+        const Phone = req.body.Phone;
+        const Tel = req.body.Tel;
+        const Is_True = req.body.Is_True;
+        const Id = req.query.Id;
+        let sql;
+        if (Is_True) {
+            sql += `update s_address set Is_True=0 where UId=${UId};`;
+        }
+        sql += ` update s_address 
+                    S_Name= '${S_Name}', 
+                    Province= '${Province}', 
+                    City='${City}', 
+                    AREA= '${Area}', 
+                    Address= '${Address}', 
+                    Mail='${Mail}', 
+                    Phone= '${Phone}', 
+                    Tel= '${Tel}', 
+                    Is_True=  ${Is_True}
+                    where Id= ${Id}
+                    ); `
+        db.connect(sql, [], (err, data) => {
+            result = new Result();
+            if (err == null) {
+                result.success = true; //返回成功
+                // result.data = data;
+                result.message = "" //成功描述
+                resp.send(result)
+            }
+        });
+    },
+    //删除我的地址
+    delMyAddress(req, resp) {
+
+        let Id = req.query.Id;
+        let sql = ` delete from  s_address WHERE  Id=${Id}`
+        db.connect(sql, [], (err, data) => {
+            result = new Result();
+            if (err == null) {
+                result.success = true; //返回成功
+                // result.data = data;
+                result.message = "" //成功描述
+                resp.send(result)
+            }
+        });
+    },
+    //查询用户付款方式
+    getPayWay(req, rep) {
+        // let Id = req.query.Id;
+        let sql = ` select * from S_User_PayWay WHERE  UId=${UId}`
+        db.connect(sql, [], (err, data) => {
+            result = new Result();
+            if (err == null) {
+                result.success = true; //返回成功
+                result.data = data;
+                result.message = "" //成功描述
+                resp.send(result)
+            }
+        });
+    },
+    //修改或者新增
+    addOrUpdatePayWay(req, rep) {
+        let P_Id = req.body.P_Id;
+        let Send_Type = req.body.Send_Type;
+        let Pay_Type_Id = req.body.Pay_Type_Id;
+        let sql;
+        if (P_Id == 0) {
+            sql = `
+            INSERT INTO s_user_payway 
+                (
+                Send_Type, 
+                Pay_Type_Id, 
+                UId
+                )
+                VALUES
+                (
+                ${Send_Type}, 
+                ${Pay_Type_Id}, 
+                ${P_Id}, 
+                ); `
+        } else {
+            sql = ` update s_user_payway set Send_Type= ${Send_Type},Pay_Type_Id=${Pay_Type_Id} where P_Id=${P_Id}  `
+        }
+        db.connect(sql, [], (err, data) => {
+            result = new Result();
+            if (err == null) {
+                result.success = true; //返回成功
+                // result.data = data;
+                result.message = "" //成功描述
+                resp.send(result);
+            }
+        });
+    }
 
 }
 module.exports = indexdao;

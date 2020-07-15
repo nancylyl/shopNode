@@ -13,36 +13,46 @@ const router = express.Router();
 console.log("路由接收成功22----");
 
 //首页
-router.get("/getIndex.do", indexController.getIndex)
-
-
-
-//获取产品相关
-// router.post("/stu/index.do", indexController.getIndex);
-router.get("/getProductDetail.do", productController.getProductDetail);
-router.post("/getProductList.do", productController.getProductList);
-router.get("/getProductListByKey.do", productController.getProductListByKey);
-router.get("/getHotProduct.do", productController.getHotProduct)
-router.get("/getMyOder.do", productController.getMyOder)
-
+router.get("/getIndex.do", indexController.getIndex) //首页信息
+    //获取产品相关
+    // router.post("/stu/index.do", indexController.getIndex);
+router.get("/getProductDetail.do", productController.getProductDetail); //产品详情
+router.post("/getProductList.do", productController.getProductList); //产品列表
+router.get("/getProductListByKey.do", productController.getProductListByKey); //根据关键字搜索
+router.get("/getHotProduct.do", productController.getHotProduct) //热销商品
+router.get("/getMyOder.do", productController.getMyOder) //我的订单
+router.post("/addOrder.do", productController.addOrder) //我的订单
+router.get("/updateOrderState.do", productController.updateOrderState) //修改订单状态
 
 
 //菜单栏信息
-router.get("/getMenu.do", commonController.getMenu);
-router.get("/getPayBy.do", commonController.getPayBy);
-
-
-
+router.get("/getMenu.do", commonController.getMenu); //我的菜单信息
+router.get("/getPayBy.do", commonController.getPayBy); //付款方式
 
 //用户
-router.post('/login.do', userController.login)
-router.post('/register.do', userController.register)
-router.get('/getUserInfo.do', userController.getUserInfo)
-router.get('/updataUserInfo.do', userController.updataUserInfo)
-router.get('/updataPass.do', userController.updataPass)
-router.get('/getComment.do', userController.getComment) //用户评论
-router.get('/updataUserINV.do', userController.updataUserINV) //用户评论
-router.get('/getMyMessage.do', userController.getMyMessage) //我的消息列表
+router.post('/login.do', userController.login) //用户登录
+router.post('/register.do', userController.register) //注册信息
+router.get('/getUserInfo.do', userController.getUserInfo) //获取用户信息
+router.post('/updataUserInfo.do', userController.updataUserInfo) //修改用户信息
+router.post('/updataPass.do', userController.updataPass) //修改用户密码
+router.post('/getComment.do', userController.getComment) //用户评论
+router.post('/updataUserINV.do', userController.updataUserINV) //用户评论
+router.get('/getMyMessage.do', userController.getMyMessage) //用户消息信息
+router.get('/getMyAddress.do', userController.getMyAddress) //我的收获地址
+router.post('/addMyAddress.do', userController.addMyAddress) //添加我的收获地址
+router.post('/getUpdateMyAddress.do', userController.updateMyAddress) //修改我的地址
+router.get('/delMyAddress.do', userController.delMyAddress) //删除我的地址
+router.get('/getPayWay.do', userController.getPayWay) //得到付款方式
+router.post('/addOrUpdatePayWay.do', userController.addOrUpdatePayWay) //修改，添加付款方式
+
+
+
+
+
+
+
+
+
 
 
 module.exports = router;

@@ -4,10 +4,8 @@ const indexdao = {
 
     /* 产品列表 需要分页 */
     getIndex(req, resp) {
-
         let sql = `SELECT * FROM s_banner;
         SELECT * FROM s_productpic WHERE isshowindex=1;`
-
         db.connect(sql, [], (err, data) => {
             result = new Result();
             if (err == null) {

@@ -19,6 +19,12 @@ const userController = {
     },
     getMyOder(res, resp) {
         dao.getMyOder(res, resp);
+    },
+    addOrder(res, resp) {
+        dao.addOrder(res, resp);
+    },
+    updateOrderState(res, resp) {
+        dao.updateOrderState(res, resp);
     }
 
 }
