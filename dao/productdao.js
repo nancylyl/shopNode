@@ -50,20 +50,27 @@ const indexdao = {
             let Sort = req.Sort;
             let PageCount = bodydata.PageCount;
             let CurrentPage = bodydata.CurrentPage;
-            let KeyName = bodydata.Key;
+            let KeyName = bodydata.key;
             let P_Type_Menu_Id = bodydata.P_Type_Menu_Id; //产品类型
             let Prod_Type_Id = bodydata.Prod_Type_Id; //尺寸 尺寸：卧室用品 0 无1 .2.0米 2.1.8米 3.1.5米4. 1.2米
             let Prod_Dec_Type = bodydata.Prod_Dec_Type; //所属标题分类类型 如果是卧室用品 类型 0.无1.纯色2.磨毛3.条纹.4.印花5.绣花0 纯色1 格子2条纹3印花
             let Root_Type_Id = bodydata.Root_Type_Id; //根数：1.240根2.300根3.350根4.600根5.枕头6..床单被罩枕巾单品7.靠垫/靠垫套  0为无
 
             let where = ' where 1=1 ';
+            console.log(P_Type_Menu_Id);
+            let typeObj = P_Type_Menu_Id.split('_');
+            //  console.log(typeObj);
+            // if (typeObj.length != 1) {
+            //     P_Type_Menu_Id = typeObj[0]
+            // }
+
             let sql = "select * from S_Product ";
             //  console.log(KeyName);
             try {
 
 
                 if (KeyName != undefined && KeyName != null && KeyName != '') {
-                    where += ` and Pro_Name like '%${KeyName}%'`;
+                    where += ` and Pro_Name='${KeyName}'`;
                 }
             } catch {}
 
@@ -90,9 +97,16 @@ const indexdao = {
 
             }
             try {
-                if (P_Type_Menu_Id != undefined && P_Type_Menu_Id > 0) {
-                    //     where += ` and (P_Type_Menu_Id=${P_Type_Menu_Id} or P_Type_Menu_ParentId =${P_Type_Menu_Id}) `;
-                    where += ` and ( P_Type_Menu_ParentId =${P_Type_Menu_Id}) `;
+                if (P_Type_Menu_Id != '') {
+                    //     where += ` and (        =${P_Type_Menu_Id} or P_Type_Menu_ParentId =${P_Type_Menu_Id}) `;
+                    where += ` and P_Type_Menu_ParentId =${typeObj[0]} `;
+                    // if (typeObj.length == 1) {
+                    //     where += ` and P_Type_Menu_ParentId =${typeObj[0]} `;
+                    // } else if (typeObj.length == 2) {
+                    //     where += ` and ( P_Type_Menu_Id in( select P_Type_Menu_Id from  S_Product_Type_Menu where ParentId=${typeObj[1]} or P_Type_Menu_Id=${typeObj[0]}) `;
+                    // } else if (typeObj.length == 3) {
+                    //     where += ` and P_Type_Menu_Id=${typeObj[2]} `;
+                    // }
                 }
 
             } catch (error) {
@@ -107,7 +121,7 @@ const indexdao = {
             } else if (Sort == 4) {
                 sql += ' order by Price  desc'
             }
-            //y console.log(sql);
+            console.log(sql);
             let nowdata = [];
             const that = this;
             db.connectPage(sql, [], PageCount, CurrentPage, async(err, data) => {
@@ -227,7 +241,11 @@ const indexdao = {
         )
         ) 
         t2 ON t1.PId=t2.Pro_Id
-          WHERE Uid=${UId} `;
+          WHERE Uid=${UId} ;
+          SELECT DISTINCT ordernum,SUM(price*num ) TotalPrice,State,CreateDate,New_Name FROM s_orderdetail
+          WHERE Uid=${UId} ;
+          
+          `;
         if (state > 0) {
             sql += " and t1.state=" + state + ""
         }
