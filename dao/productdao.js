@@ -58,7 +58,10 @@ const indexdao = {
 
             let where = ' where 1=1 ';
             console.log(P_Type_Menu_Id);
-            let typeObj = P_Type_Menu_Id.split('_');
+            let typeObj = [];
+            try {
+                typeObj = P_Type_Menu_Id.split('_');
+            } catch {}
             //  console.log(typeObj);
             // if (typeObj.length != 1) {
             //     P_Type_Menu_Id = typeObj[0]
@@ -97,7 +100,7 @@ const indexdao = {
 
             }
             try {
-                if (P_Type_Menu_Id != '') {
+                if (P_Type_Menu_Id != '' && P_Type_Menu_Id != undefined) {
                     //     where += ` and (        =${P_Type_Menu_Id} or P_Type_Menu_ParentId =${P_Type_Menu_Id}) `;
                     where += ` and P_Type_Menu_ParentId =${typeObj[0]} `;
                     // if (typeObj.length == 1) {
@@ -233,15 +236,17 @@ const indexdao = {
         (SELECT IFNULL(SUM(IFNULL(Num,0)*IFNULL(Price,0) ),0)  FROM s_orderdetail WHERE UId=t1.UId) totalMoney
          FROM S_UserInfo t1 WHERE t1.UId=${UId};
          
-        SELECT  t1.*,t2.Pro_Url FROM s_orderdetail t1
-        JOIN 
-        (
-        SELECT * FROM S_ProductPic WHERE id IN(
-        SELECT MIN(id) FROM S_ProductPic WHERE TYPE=3 GROUP BY Pro_Id
-        )
-        ) 
-        t2 ON t1.PId=t2.Pro_Id
+         SELECT  t1.*,t2.Pro_Url,t3.Pro_Name FROM s_orderdetail t1
+         JOIN 
+         (
+         SELECT * FROM S_ProductPic WHERE id IN(
+         SELECT MIN(id) FROM S_ProductPic WHERE TYPE=3 GROUP BY Pro_Id
+         )
+         ) 
+         t2 ON t1.PId=t2.Pro_Id
+         JOIN S_Product t3 ON t3.Pro_Id=t2.Pro_Id
           WHERE Uid=${UId} ;
+
           SELECT DISTINCT ordernum,SUM(price*num ) TotalPrice,State,CreateDate,New_Name FROM s_orderdetail
           WHERE Uid=${UId} ;
           
