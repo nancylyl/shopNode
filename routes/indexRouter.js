@@ -27,7 +27,7 @@ router.get("/updateOrderState.do", productController.updateOrderState) //修改�
 
 //菜单栏信息
 router.get("/getMenu.do", commonController.getMenu); //我的菜单信息
-router.get("/getPayBy.do", commonController.getPayBy); //付款方式
+router.get("/getPayBy.do", commonController.getPayBy); //银行卡信息
 
 //用户
 router.post('/login.do', userController.login) //用户登录

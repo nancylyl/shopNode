@@ -11,7 +11,7 @@ const indexdao = {
     getProductDetail(req, resp) {
 
         let Pro_Id = parseInt(req.query.Pro_Id);
-        console.log(req.query,Pro_Id);
+        //console.log(req.query,Pro_Id);
 
         let sql = `SELECT t1.*,t2.pro_data FROM s_product t1 JOIN  
         S_ProDetails t2 ON t1.pro_id=t2.Pro_Id
@@ -157,7 +157,7 @@ const indexdao = {
     //根据关键字查询15条产品信息
     getProductListByKey(req, resp) {
         let key = req.query.key;
-        let sql = "select Pro_Id,Pro_Name from S_Product where Pro_Name like '%" + key + "%' limit 0,15";
+        let sql = "select Pro_Id value,Pro_Name label from S_Product where Pro_Name like '%" + key + "%' limit 0,15";
         db.connect(sql, [], (err, data) => {
             result = new Result();
             if (err == null) {
@@ -184,8 +184,8 @@ const indexdao = {
             SELECT Pro_Url,Pro_Id FROM  S_ProductPic  WHERE id IN(
             SELECT MIN(id) id FROM S_ProductPic WHERE TYPE=3 GROUP BY
             pro_id )
-            ) t2 ON t1.Pro_Id=t2.Pro_Id 
-            ORDER BY  counts DESC  ) t1 LIMIT 0,10
+            ) t2 ON t1.Pro_Id=t2.Pro_Id   WHERE t1.Tag_Type=2
+            ORDER BY  counts DESC  )a
                 `;
 
         db.connect(sql, [], (err, data) => {

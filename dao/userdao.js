@@ -85,6 +85,7 @@ const indexdao = {
             }
         });
     },
+
     updataUserInfo(req, resp) {
         const Name = req.body.Name;
         const sex = req.body.sex;
