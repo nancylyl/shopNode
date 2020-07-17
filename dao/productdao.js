@@ -254,7 +254,7 @@ const indexdao = {
         if (state > 0) {
             sql += " and t1.state=" + state + ""
         }
-        console.log(sql);
+        //console.log(sql);
         db.connect(sql, [], (err, data) => {
             result = new Result();
             if (err == null) {
