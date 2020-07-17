@@ -124,7 +124,7 @@ const indexdao = {
             } else if (Sort == 4) {
                 sql += ' order by Price  desc'
             }
-            console.log(sql);
+            // console.log(sql);
             let nowdata = [];
             const that = this;
             db.connectPage(sql, [], PageCount, CurrentPage, async(err, data) => {
@@ -284,7 +284,16 @@ const indexdao = {
         let OrderNum = "BMC" + date.format(data, 'YYYYMMDD').toString() + lastdate.toString();
         let Form_Text = '用户' + UserName + ' 购买商品编号为； 订单编号为：' + OrderNum;
         let sql = '';
+        let totalScore = 0;
         for (let item of datas) {
+            try {
+                totalScore = parseFloat(item.Score) * parseInt(item.Num);
+                // console.log(totalScore);
+
+            } catch (e) {
+                console.log(e);
+            }
+
             sql += `INSERT INTO s_orderdetail 
             (
             OrderNum, 
@@ -343,7 +352,23 @@ const indexdao = {
             );
         UPDATE 	S_Product SET Pro_NewCount=Pro_NewCount-1 WHERE Pro_Id=${item.PId}; `;
         }
+        sql += ` INSERT INTO s_integraldetail 
+            (
+                UId,
+                SourceID,
+                SourceTypeID,
+                Content
+            )
+        VALUES
+            (
+                ${UId},
+                '${OrderNum}',
+                1,
+                '用户购买商品赠送积分：${totalScore} '
+            );
+        UPDATE s_userinfo SET SumScore=SumScore+${totalScore} WHERE UId=${UId} ;`;
 
+        //  console.log(sql);
 
         db.connect(sql, [], (err, data) => {
             result = new Result();
@@ -398,6 +423,42 @@ const indexdao = {
         });
 
     },
+    /* 填写评论*/
+    addComment(req, resp) {
+        let { OrderNum, Star, Content } = req.body;
+        let sql = `INSERT INTO shopmanage.s_commentdetail 
+        (
+        PId, 
+        OId, 
+        Star, 
+        Content
+        )
+        VALUES
+        (
+            0,
+       '${OrderNum}',
+       ${Star},
+       '${Content}'
+        ); `;
+        sql += `  UPDATE S_OrderDetail SET State=5 WHERE OrderNum='${OrderNum}' `;
+        db.connect(sql, [], (err, data) => {
+            result = new Result();
+            if (err == null) {
+                // result.data = data; //列表显示条数
+                result.success = true; //返回成功
+                result.message = "评论成功" //成功描述
+
+                resp.send(result)
+            } else {
+                console.log(err);
+                result.message = "查询失败！"
+                resp.send(result)
+
+            }
+
+        });
+
+    }
 
 }
 module.exports = indexdao;
