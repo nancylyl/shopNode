@@ -284,7 +284,16 @@ const indexdao = {
         let OrderNum = "BMC" + date.format(data, 'YYYYMMDD').toString() + lastdate.toString();
         let Form_Text = '用户' + UserName + ' 购买商品编号为； 订单编号为：' + OrderNum;
         let sql = '';
+        let totalScore = 0;
         for (let item of datas) {
+            try {
+                totalScore = parseFloat(item.Score) * parseInt(item.Num);
+                // console.log(totalScore);
+
+            } catch (e) {
+                console.log(e);
+            }
+
             sql += `INSERT INTO s_orderdetail 
             (
             OrderNum, 
@@ -343,7 +352,23 @@ const indexdao = {
             );
         UPDATE 	S_Product SET Pro_NewCount=Pro_NewCount-1 WHERE Pro_Id=${item.PId}; `;
         }
+        sql += ` INSERT INTO s_integraldetail 
+            (
+                UId,
+                SourceID,
+                SourceTypeID,
+                Content
+            )
+        VALUES
+            (
+                ${UId},
+                '${OrderNum}',
+                1,
+                '用户购买商品赠送积分：${totalScore} '
+            );
+        UPDATE s_userinfo SET SumScore=SumScore+${totalScore} WHERE UId=${UId} ;`;
 
+        //  console.log(sql);
 
         db.connect(sql, [], (err, data) => {
             result = new Result();
