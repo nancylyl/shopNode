@@ -92,13 +92,8 @@ const indexdao = {
         const sex = req.body.sex;
         const Birthday = req.body.Birthday;
         const Code = req.body.Code;
-<<<<<<< HEAD
         let Birthday = a.substring(0, 10);
         let sql = ` UPDATE  S_UserInfo SET NAME='${Name}' ,Sex=${Sex} ,Birthday='${Birthday}',CODE='${Code}' WHERE UId=${UId} `
-=======
-
-        let sql = ` UPDATE  S_UserInfo SET NAME='${Name}' ,sex=${sex} ,Birthday='${Birthday}',CODE='${Code}' WHERE UId=${UId} `
->>>>>>> 0bc17749ec5309add5c423a0a680004a0465f562
         console.log(sql);
         db.connect(sql, [], (err, data) => {
             result = new Result();
@@ -232,7 +227,7 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
             if (err == null) {
                 result.success = true; //返回成功
                 result.data = data;
-                result.message = "" ;//成功描述
+                result.message = ""; //成功描述
                 resp.send(result)
             }
         });
@@ -250,20 +245,15 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
         const Phone = req.body.Phone;
         const Tel = req.body.Tel;
         const Is_True = req.body.Is_True;
-        const UId=req.body.UId;
+        const UId = req.body.UId;
         // console.log(req.body)
         let sql;
         if (Is_True) {
-            sql =`update s_address set Is_True=0 where UId=${UId}`;
+            sql = `update s_address set Is_True=0 where UId=${UId}`;
         }
-<<<<<<< HEAD
+
         sql = `INSERT INTO s_address (UId,S_Name,Province,City,Area,Address,Mail,Phone,Tel,Is_True) VALUES(${UId},'${S_Name}','${Province}','${City}','${Area}','${Address}','${Mail}','${Phone}','${Tel}',${Is_True})`;
 
-
-=======
-        sql =`INSERT INTO s_address (UId,S_Name,Province,City,Area,Address,Mail,Phone,Tel,Is_True) VALUES(${UId},'${S_Name}','${Province}','${City}','${Area}','${Address}','${Mail}','${Phone}','${Tel}',${Is_True})`;
-        console.log(sql);
->>>>>>> 0bc17749ec5309add5c423a0a680004a0465f562
         db.connect(sql, [], (err, data) => {
             console.log(err)
             console.log(123)
