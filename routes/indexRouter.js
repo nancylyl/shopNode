@@ -23,6 +23,8 @@ router.get("/getHotProduct.do", productController.getHotProduct) //热销商品
 router.get("/getMyOder.do", productController.getMyOder) //我的订单
 router.post("/addOrder.do", productController.addOrder) //我的订单
 router.get("/updateOrderState.do", productController.updateOrderState) //修改订单状态
+router.get("/getProductComment.do", productController.getProductComment) //产品评论
+
 
 
 //菜单栏信息

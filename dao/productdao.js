@@ -254,7 +254,7 @@ const indexdao = {
         if (state > 0) {
             sql += " and t1.state=" + state + ""
         }
-        console.log(sql);
+        //console.log(sql);
         db.connect(sql, [], (err, data) => {
             result = new Result();
             if (err == null) {
@@ -394,16 +394,17 @@ const indexdao = {
     updateOrderState(req, resp) {
         //console.log(UId);
         let state = req.query.state;
-        let orderId = req.query.orderId;
-        let sql;
+        let orderNum = req.query.orderNum;
+        let sql = '';
         if (state == 1) {
-            let sql = `UPDATE  s_userinfo SET SumScore=SumScore+(
+            sql = `UPDATE  s_userinfo SET SumScore=SumScore+(
                 SELECT  t2.Score FROM s_orderdetail t1 
                 JOIN s_product t2 ON t2.Pro_Id=t1.PId
-                WHERE t1.id=${orderId})
+                WHERE t1.OrderNum='${orderNum}')
                 WHERE UId=${UId} ; `;
         }
-        sql += ` UPDATE s_orderdetail SET state=${state} WHERE id=${orderId} `;
+        sql += ` UPDATE s_orderdetail SET state=${state} WHERE OrderNum='${orderNum}' `;
+        //console.log(sql);
 
         db.connect(sql, [], (err, data) => {
             result = new Result();
@@ -458,7 +459,33 @@ const indexdao = {
 
         });
 
-    }
+    },
+    //产品评论
+    getProductComment(req, resp) {
+        let Pro_Id = res.query.Pro_Id;
+        let sql = `
+        SELECT t1.*,t3.* FROM S_CommentDetail t1 
+        JOIN s_orderdetail t2 ON t2.ordernum=t1.oid
+        JOIN s_userinfo t3 ON t3.uid=t2.uid
+       WHERE  t2.Pid=${Pro_Id}
+ 
+        `
+        db.connect(sql, [], async(err, data) => {
+            result = new Result();
+            if (err == null) {
+                result.success = true; //返回成功
+                //查询产品对应的图片
+                for (var i = 0; i < data.length; i++) {
+                    let item = data[i];
+                    const returnMess = await that.getCommentImages(item.CId);
+                    data[i].children = returnMess.data;
+                }
+                result.data = data;
+                result.message = "查询成功" //成功描述
+                resp.send(result)
+            }
+        });
+    },
 
 }
 module.exports = indexdao;

@@ -25,6 +25,9 @@ const userController = {
     },
     updateOrderState(res, resp) {
         dao.updateOrderState(res, resp);
+    },
+    getProductComment(res, resp) {
+        dao.getProductComment(res, resp);
     }
 
 }

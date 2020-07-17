@@ -2,26 +2,28 @@ const db = require("../config/dbpoolconfig");
 const Result = require("../config/ActionResult");
 const session = require("express-session");
 const { userinfo = null } = session;
-const UId = 1 //userinfo.UId;
+const UId = 1; //userinfo.UId;
 const indexdao = {
 
     /* 产品列表 需要分页 */
     login(req, resp) {
 
         const Account = req.body.Account;
-        const Password = req.body.Password;
+        const PassWord = req.body.PassWord;
 
-        let sql = `SELECT * FROM  s_userinfo WHERE  account='${Account}' AND PASSWORD='${Password}'`
-        // console.log(sql);
+        let sql = `SELECT * FROM  s_userinfo WHERE  account='${Account}' AND PASSWORD='${PassWord}'`
+        console.log(sql);
         db.connect(sql, [], (err, data) => {
             result = new Result();
             if (err == null) {
 
                 if (data.length > 0) {
+
                     result.success = true; //返回成功
                     result.message = "查询成功！" //成功描述
                     var userinfo = JSON.parse(JSON.stringify(data));
                     req.session.userinfo = userinfo[0];
+                    result.data = userinfo[0];
                     resp.send(result)
                 } else {
                     result.success = false; //
@@ -91,7 +93,7 @@ const indexdao = {
         const Sex = req.body.Sex;
         const a = req.body.Birthday;
         const Code = req.body.Code;
-        let Birthday=a.substring(0,10);
+        let Birthday = a.substring(0, 10);
         let sql = ` UPDATE  S_UserInfo SET NAME='${Name}' ,Sex=${Sex} ,Birthday='${Birthday}',CODE='${Code}' WHERE UId=${UId} `
         console.log(sql);
         db.connect(sql, [], (err, data) => {
@@ -174,7 +176,7 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
         const InvoiceType = req.body.InvoiceType;
         const Inv_Content = req.body.Inv_Content;
         let sql = ` UPDATE  S_UserInfo SET InvoiceType='${InvoiceType}' ,Inv_Content=${Inv_Content}  WHERE UId=${UId} `
-        // console.log(sql);
+            // console.log(sql);
         db.connect(sql, [], (err, data) => {
             result = new Result();
             if (err == null) {
@@ -191,7 +193,7 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
         let sql = ` SELECT *,
     CASE Message_Type WHEN 1  THEN '活动通知' WHEN  2 THEN '优惠券发放' WHEN 3  THEN '积分变动' ELSE '其它' END Message
     FROM S_Message  WHERE UId=${UId} `
-        //  console.log(sql);
+            //  console.log(sql);
         db.connect(sql, [], (err, data) => {
             result = new Result();
             if (err == null) {
@@ -206,7 +208,7 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
     getMyMessage(req, resp) {
 
         let sql = ` SELECT * FROM S_Address  WHERE UId=${UId} `
-        //  console.log(sql);
+            //  console.log(sql);
         db.connect(sql, [], (err, data) => {
             result = new Result();
             if (err == null) {
@@ -246,7 +248,7 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
         if (Is_True) {
             sql += `update s_address set Is_True=0 where UId=${UId};`;
         }
-        sql =`INSERT INTO s_address (UId,S_Name,Province,City,Area,Address,Mail,Phone,Tel,Is_True) VALUES(${UId},'${S_Name}','${Province}','${City}','${Area}','${Address}','${Mail}','${Phone}','${Tel}',${Is_True})`;
+        sql = `INSERT INTO s_address (UId,S_Name,Province,City,Area,Address,Mail,Phone,Tel,Is_True) VALUES(${UId},'${S_Name}','${Province}','${City}','${Area}','${Address}','${Mail}','${Phone}','${Tel}',${Is_True})`;
 
 
         db.connect(sql, [], (err, data) => {
