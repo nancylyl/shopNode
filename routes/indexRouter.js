@@ -46,7 +46,7 @@ router.post('/UpdateMyAddress.do', userController.updateMyAddress) //修改我�
 router.post('/delMyAddress.do', userController.delMyAddress) //删除我的地址
 router.get('/getPayWay.do', userController.getPayWay) //得到付款方式
 router.post('/addOrUpdatePayWay.do', userController.addOrUpdatePayWay) //修改，添加付款方式
-
+router.post('/addComment.do', userController.addComment)
 
 
 
@@ -54,22 +54,22 @@ router.post('/addOrUpdatePayWay.do', userController.addOrUpdatePayWay) //修改�
 
 
 /*收藏产品*/
-router.post('/collect.do',productController.collect);
+router.post('/collect.do', productController.collect);
 
 /*展示收藏产品*/
-router.get('/myCollect.do',productController.myPro)
+router.get('/myCollect.do', productController.myPro)
 
 /*展示收藏图片的路径*/
-router.get('/proSrc.do',productController.proSrc)
+router.get('/proSrc.do', productController.proSrc)
 
 /*展示收藏图片的名称和价格*/
 // router.get('/proPriceTitle.do',productController.proPriceTitle)
 
 /*删除收藏产品的ID*/
-router.get('/theProId.do',productController.thePicId)
+router.get('/theProId.do', productController.thePicId)
 
 /*删除收藏产品*/
-router.post('/deletePro.do',productController.deletePro)
+router.post('/deletePro.do', productController.deletePro)
 
 
 

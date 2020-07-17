@@ -424,42 +424,7 @@ const indexdao = {
         });
 
     },
-    /* 填写评论*/
-    addComment(req, resp) {
-        let { OrderNum, Star, Content } = req.body;
-        let sql = `INSERT INTO shopmanage.s_commentdetail 
-        (
-        PId, 
-        OId, 
-        Star, 
-        Content
-        )
-        VALUES
-        (
-            0,
-       '${OrderNum}',
-       ${Star},
-       '${Content}'
-        ); `;
-        sql += `  UPDATE S_OrderDetail SET State=5 WHERE OrderNum='${OrderNum}' `;
-        db.connect(sql, [], (err, data) => {
-            result = new Result();
-            if (err == null) {
-                // result.data = data; //列表显示条数
-                result.success = true; //返回成功
-                result.message = "评论成功" //成功描述
 
-                resp.send(result)
-            } else {
-                console.log(err);
-                result.message = "查询失败！"
-                resp.send(result)
-
-            }
-
-        });
-
-    },
     //产品评论
     getProductComment(req, resp) {
         let Pro_Id = res.query.Pro_Id;

@@ -252,7 +252,7 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
             sql = `update s_address set Is_True=0 where UId=${UId}`;
         }
 
-        sql = `INSERT INTO s_address (UId,S_Name,Province,City,Area,Address,Mail,Phone,Tel,Is_True) VALUES(${UId},'${S_Name}','${Province}','${City}','${Area}','${Address}','${Mail}','${Phone}','${Tel}',${Is_True})`;
+        sql += `INSERT INTO s_address (UId,S_Name,Province,City,Area,Address,Mail,Phone,Tel,Is_True) VALUES(${UId},'${S_Name}','${Province}','${City}','${Area}','${Address}','${Mail}','${Phone}','${Tel}',${Is_True})`;
 
         db.connect(sql, [], (err, data) => {
             console.log(err)
@@ -283,7 +283,7 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
         if (Is_True) {
             sql = `update s_address set Is_True=0 where UId=${UId};`;
         }
-        sql = ` update s_address set
+        sql += ` update s_address set
                     S_Name= '${S_Name}', 
                     Province= '${Province}', 
                     City='${City}', 
@@ -368,8 +368,43 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
                 resp.send(result);
             }
         });
-    }
+    },
+    /* 填写评论*/
+    addComment(req, resp) {
+        let { OrderNum, Star, Content } = req.body;
+        let sql = `INSERT INTO shopmanage.s_commentdetail 
+        (
+        PId, 
+        OId, 
+        Star, 
+        Content
+        )
+        VALUES
+        (
+            0,
+       '${OrderNum}',
+       ${Star},
+       '${Content}'
+        ); `;
+        sql += `  UPDATE S_OrderDetail SET State=5 WHERE OrderNum='${OrderNum}' `;
+        db.connect(sql, [], (err, data) => {
+            result = new Result();
+            if (err == null) {
+                // result.data = data; //列表显示条数
+                result.success = true; //返回成功
+                result.message = "评论成功" //成功描述
 
+                resp.send(result)
+            } else {
+                console.log(err);
+                result.message = "查询失败！"
+                resp.send(result)
+
+            }
+
+        });
+
+    },
 
 }
 module.exports = indexdao;

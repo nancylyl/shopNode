@@ -52,6 +52,10 @@ const userController = {
         },
         addOrder(res, resp) {
             dao.addOrder(res, resp);
+        },
+
+        addComment(res, resp) {
+            dao.addComment(res, resp)
         }
 
     }
