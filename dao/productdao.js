@@ -57,7 +57,7 @@ const indexdao = {
             let Root_Type_Id = bodydata.Root_Type_Id; //根数：1.240根2.300根3.350根4.600根5.枕头6..床单被罩枕巾单品7.靠垫/靠垫套  0为无
 
             let where = ' where 1=1 ';
-            console.log(P_Type_Menu_Id);
+            // console.log(P_Type_Menu_Id);
             let typeObj = [];
             try {
                 typeObj = P_Type_Menu_Id.split('_');
@@ -232,7 +232,7 @@ const indexdao = {
             state = req.query.State;
         } catch {}
         let sql = `
-        SELECT '新用户' userTypeName ,NAME,
+        SELECT '新用户' userTypeName,NAME,
         (SELECT IFNULL(SUM(IFNULL(Num,0)*IFNULL(Price,0) ),0)  FROM s_orderdetail WHERE UId=t1.UId) totalMoney
          FROM S_UserInfo t1 WHERE t1.UId=${UId};
          
@@ -276,100 +276,82 @@ const indexdao = {
 
     /* 用户下单 */
     addOrder(req, resp) {
-        // console.log(req.body);
-        const {
-            PId,
-            Price,
-            Num,
-            Is_Invoic,
-            Invoic_Type,
-            IS_Coupon,
-            Coupon_Id,
-            Is_Gift,
-            Gift_Id,
-            Send_Type,
-            Pay_Type_Id,
-            Address_ID,
-            New_Name,
-            New_Province,
-            New_City,
-            New_Area,
-            New_Address,
-            New_Mail,
-            New_Phone,
-            New_Tel,
-            Deltime
 
-        } = req.body;
+        let datas = req.body.data;
+        //  console.log(datas);
         const data = new Date();
         const lastdate = +data;
         let OrderNum = "BMC" + date.format(data, 'YYYYMMDD').toString() + lastdate.toString();
-        let Form_Text = '用户' + UserName + ' 购买商品编号为:' + PId + '； 订单编号为：' + OrderNum
-        let sql = `
-        INSERT INTO shopmanage.s_orderdetail 
-        (
-        OrderNum, 
-        UId, 
-        PId, 
-        Price, 
-        Num, 
-        Is_Invoic, 
-        Invoic_Type, 
-        IS_Coupon, 
-        Coupon_Id, 
-        Is_Gift, 
-        Gift_Id, 
-        Send_Type, 
-        Pay_Type_Id, 
-        Address_ID, 
-        New_Name, 
-        New_Province, 
-        New_City, 
-        New_Area, 
-        New_Address, 
-        New_Mail, 
-        New_Phone, 
-        New_Tel, 
-        Deltime, 
-        Form_Text,  
-        State
-        )
-        VALUES
-        (
-        '${OrderNum}', 
-        ${UId} ,
-        ${PId} ,
-        ${Price}, 
-        ${Num} ,
-        ${Is_Invoic} ,
-        ${Invoic_Type}, 
-        ${IS_Coupon}, 
-        ${Coupon_Id} ,
-        ${Is_Gift} ,
-        ${Gift_Id} ,
-        ${Send_Type} ,
-        ${Pay_Type_Id}, 
-        ${Address_ID}, 
-        '${New_Name}',
-        '${New_Province}',
-        '${New_City}',
-        '${New_Area}',
-        '${New_Address}',
-        '${New_Mail}',
-        '${New_Phone}',
-        '${New_Tel}',
-         ${Deltime} ,
-        '${Form_Text}' ,
-        0
-        );
-    UPDATE 	S_Product SET Pro_NewCount=Pro_NewCount-1 WHERE Pro_Id=${PId} `;
-        console.log(sql);
+        let Form_Text = '用户' + UserName + ' 购买商品编号为； 订单编号为：' + OrderNum;
+        let sql = '';
+        for (let item of datas) {
+            sql += `INSERT INTO s_orderdetail 
+            (
+            OrderNum, 
+            UId, 
+            PId, 
+            Price, 
+            Num, 
+            Is_Invoic, 
+            Invoic_Type, 
+            IS_Coupon, 
+            Coupon_Id, 
+            Is_Gift, 
+            Gift_Id, 
+            Send_Type, 
+            Pay_Type_Id, 
+            Address_ID, 
+            New_Name, 
+            New_Province, 
+            New_City, 
+            New_Area, 
+            New_Address, 
+            New_Mail, 
+            New_Phone, 
+            New_Tel, 
+            Deltime, 
+            Form_Text,  
+            State
+            )
+            VALUES
+            (
+            '${OrderNum}', 
+            ${UId},
+            ${item.PId},
+            ${item.Price}, 
+            ${item.Num},
+            ${item.Is_Invoic},
+            ${item.Invoic_Type}, 
+            ${item.IS_Coupon}, 
+            ${item.Coupon_Id},
+            ${item.Is_Gift},
+            ${item.Gift_Id},
+            ${item.Send_Type},
+            ${item.Pay_Type_Id}, 
+            ${item.Address_ID}, 
+            '${item.New_Name}',
+            '${item.New_Province}',
+            '${item.New_City}',
+            '${item.New_Area}',
+            '${item.New_Address}',
+            '${item.New_Mail}',
+            '${item.New_Phone}',
+            '${item.New_Tel}',
+             ${item.Deltime},
+            '${Form_Text}',
+            0
+            );
+        UPDATE 	S_Product SET Pro_NewCount=Pro_NewCount-1 WHERE Pro_Id=${item.PId}; `;
+        }
+
+
         db.connect(sql, [], (err, data) => {
             result = new Result();
             if (err == null) {
                 //   result.data = data; //列表显示条数
                 result.success = true; //返回成功
-                result.message = "查询成功！" //成功描述
+                result.message = "添加成功" //成功描述
+
 
                 resp.send(result)
             } else {
