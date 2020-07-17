@@ -87,14 +87,13 @@ const indexdao = {
             }
         });
     },
-
     updataUserInfo(req, resp) {
         const Name = req.body.Name;
-        const Sex = req.body.Sex;
-        const a = req.body.Birthday;
+        const sex = req.body.sex;
+        const Birthday = req.body.Birthday;
         const Code = req.body.Code;
-        let Birthday = a.substring(0, 10);
-        let sql = ` UPDATE  S_UserInfo SET NAME='${Name}' ,Sex=${Sex} ,Birthday='${Birthday}',CODE='${Code}' WHERE UId=${UId} `
+
+        let sql = ` UPDATE  S_UserInfo SET NAME='${Name}' ,sex=${sex} ,Birthday='${Birthday}',CODE='${Code}' WHERE UId=${UId} `
         console.log(sql);
         db.connect(sql, [], (err, data) => {
             result = new Result();
@@ -221,14 +220,14 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
     },
     //我的收获地址
     getMyAddress(req, resp) {
-
-        let sql = ` SELECT * FROM s_address WHERE  UId=${UId} `
+        let sql = ` SELECT * FROM s_address WHERE  UId=3 `;
+        console.log(sql)
         db.connect(sql, [], (err, data) => {
             result = new Result();
             if (err == null) {
                 result.success = true; //返回成功
                 result.data = data;
-                result.message = "" //成功描述
+                result.message = "" ;//成功描述
                 resp.send(result)
             }
         });
@@ -237,33 +236,38 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
     addMyAddress(req, resp) {
         const S_Name = req.body.S_Name;
         const Province = req.body.Province;
+        console.log(Province);
         const City = req.body.City;
+        console.log(typeof City)
         const Area = req.body.Area;
         const Address = req.body.Address;
         const Mail = req.body.Mail;
         const Phone = req.body.Phone;
         const Tel = req.body.Tel;
         const Is_True = req.body.Is_True;
+        const UId=req.body.UId;
+        // console.log(req.body)
         let sql;
         if (Is_True) {
-            sql += `update s_address set Is_True=0 where UId=${UId};`;
+            sql =`update s_address set Is_True=0 where UId=${UId}`;
         }
-        sql = `INSERT INTO s_address (UId,S_Name,Province,City,Area,Address,Mail,Phone,Tel,Is_True) VALUES(${UId},'${S_Name}','${Province}','${City}','${Area}','${Address}','${Mail}','${Phone}','${Tel}',${Is_True})`;
-
-
+        sql =`INSERT INTO s_address (UId,S_Name,Province,City,Area,Address,Mail,Phone,Tel,Is_True) VALUES(${UId},'${S_Name}','${Province}','${City}','${Area}','${Address}','${Mail}','${Phone}','${Tel}',${Is_True})`;
+        console.log(sql);
         db.connect(sql, [], (err, data) => {
+            console.log(err)
+            console.log(123)
             result = new Result();
-            if (err == null) {
+            if (err != null) {
+
                 result.success = true; //返回成功
                 // result.data = data;
-                result.message = "" //成功描述
+                result.message = ""; //成功描述
                 resp.send(result)
             }
         });
     },
     //修改收获地址
     updateMyAddress(req, resp) {
-
         const S_Name = req.body.S_Name;
         const Province = req.body.Province;
         const City = req.body.City;
@@ -273,12 +277,12 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
         const Phone = req.body.Phone;
         const Tel = req.body.Tel;
         const Is_True = req.body.Is_True;
-        const Id = req.query.Id;
+        const Id = req.body.Id;
         let sql;
         if (Is_True) {
-            sql += `update s_address set Is_True=0 where UId=${UId};`;
+            sql = `update s_address set Is_True=0 where UId=${UId};`;
         }
-        sql += ` update s_address 
+        sql = ` update s_address set
                     S_Name= '${S_Name}', 
                     Province= '${Province}', 
                     City='${City}', 
@@ -289,7 +293,9 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
                     Tel= '${Tel}', 
                     Is_True=  ${Is_True}
                     where Id= ${Id}
-                    ); `
+                    `
+
+        console.log(sql)
         db.connect(sql, [], (err, data) => {
             result = new Result();
             if (err == null) {
@@ -302,9 +308,9 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
     },
     //删除我的地址
     delMyAddress(req, resp) {
-
-        let Id = req.query.Id;
+        let Id = req.body.Id;
         let sql = ` delete from  s_address WHERE  Id=${Id}`
+        console.log(sql)
         db.connect(sql, [], (err, data) => {
             result = new Result();
             if (err == null) {

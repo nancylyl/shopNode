@@ -25,6 +25,34 @@ const userController = {
     },
     updateOrderState(res, resp) {
         dao.updateOrderState(res, resp);
+    },
+
+
+
+    /*收藏产品*/
+    collect(req,resp){
+        dao.userCollect(req,resp);
+    },
+
+    /*获取用户收藏产品的ID*/
+    myPro(req,resp){
+        dao.myPro(req,resp);
+    },
+
+    /*展示收藏产品的图片路径*/
+    proSrc(req,resp){
+        dao.proSrc(req,resp);
+    },
+
+    /*删除收藏产品的ID*/
+    thePicId(req,resp){
+        dao.thePicId(req,resp);
+    },
+
+
+    /*删除收藏产品*/
+    deletePro(req,resp){
+        dao.deletePro(req,resp);
     }
 
 }
