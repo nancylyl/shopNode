@@ -434,7 +434,7 @@ const indexdao = {
     },
 
     //产品评论
-    getProductComment(req, resp) {
+    getProductComment(res, resp) {
         let Pro_Id = res.query.Pro_Id;
         let sql = `
         SELECT t1.*,t3.* FROM S_CommentDetail t1 
