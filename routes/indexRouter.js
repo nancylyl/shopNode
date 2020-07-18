@@ -33,6 +33,7 @@ router.get("/getPayBy.do", commonController.getPayBy); //银行卡信息
 
 //用户
 router.post('/login.do', userController.login) //用户登录
+router.get('/exitLogin.do', userController.exitLogin) //退etUserInfo出登录
 router.post('/register.do', userController.register) //注册信息
 router.get('/getUserInfo.do', userController.getUserInfo) //获取用户信息
 router.post('/updataUserInfo.do', userController.updataUserInfo) //修改用户信息

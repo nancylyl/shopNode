@@ -1,7 +1,26 @@
 const db = require("../config/dbpoolconfig");
 const Result = require("../config/ActionResult");
-
+const session = require("express-session");
 const commondao = {
+
+    getUserSession(req, resp) {
+        const userInfo = req.session.userInfo;
+
+
+        result = new Result();
+        if (userInfo != null) {
+            result.data = userInfo;
+            return result;
+        } else {
+            console.log('ddd');
+
+            result.success = false;
+            result.message = "您还没有登录，请先登录！"
+            resp.send(result)
+        }
+
+
+    },
     getMenu(req, resp) {
         db.connect("SELECT P_Type_Menu_ID AS id ,pname name,parentid pid,sort,url FROM s_product_type_menu WHERE state=0; ", [], (err, data) => {
             result = new Result();

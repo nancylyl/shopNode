@@ -9,6 +9,9 @@ const userController = {
         login(res, resp) {
             dao.login(res, resp)
         },
+        exitLogin(res, resp) {
+            dao.exitLogin(res, resp)
+        },
         register(res, resp) {
             dao.register(res, resp)
         },

@@ -2,9 +2,7 @@ const db = require("../config/dbpoolconfig");
 const Result = require("../config/ActionResult");
 var date = require("silly-datetime");
 const session = require("express-session");
-const { userinfo = null } = session;
-const UId = 1 //userinfo.UId;
-const UserName = "admin"; //
+
 const indexdao = {
 
     /* 产品详情 */
@@ -227,6 +225,8 @@ const indexdao = {
     /* 我的订单 */
     getMyOder(req, resp) {
         //console.log(UId);
+        let userInfo = com.getUserSession(req, resp);
+        let UId = userInfo.data.UId;
         let state = 0;
         try {
             state = req.query.State;
@@ -276,7 +276,8 @@ const indexdao = {
 
     /* 用户下单 */
     addOrder(req, resp) {
-
+        let userInfo = com.getUserSession(req, resp);
+        let UId = userInfo.data.UId;
         let datas = req.body.data;
         //  console.log(datas);
         const data = new Date();
@@ -393,6 +394,8 @@ const indexdao = {
     /* 修改等待状态 */
     updateOrderState(req, resp) {
         //console.log(UId);
+        let userInfo = com.getUserSession(req, resp);
+        let UId = userInfo.data.UId;
         let state = req.query.state;
         let orderNum = req.query.orderNum;
         let sql = '';

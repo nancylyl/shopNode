@@ -1,8 +1,7 @@
 const db = require("../config/dbpoolconfig");
 const Result = require("../config/ActionResult");
 const session = require("express-session");
-const { userinfo = null } = session;
-const UId = 1; //userinfo.UId;
+const com = require('./commondao');
 const indexdao = {
 
     /* 产品列表 需要分页 */
@@ -21,10 +20,14 @@ const indexdao = {
 
                     result.success = true; //返回成功
                     result.message = "查询成功！" //成功描述
-                    var userinfo = JSON.parse(JSON.stringify(data));
-                    req.session.userinfo = userinfo[0];
-                    result.data = userinfo[0];
-                    resp.send(result)
+                        //    var userinfo = JSON.parse(JSON.stringify(data));
+                        //  req.session.userinfo = userinfo[0];
+                        //  result.data = userinfo[0];
+                    req.session.userInfo = data[0];
+                    // console.log(JSON.stringify(data, null, 2));
+
+                    result.data = data[0];
+                    resp.send(result);
                 } else {
                     result.success = false; //
                     result.message = "查询失败，请检查用户名和密码是否正确" //
@@ -41,13 +44,22 @@ const indexdao = {
         });
 
     },
-
+    exitLogin(req, resp) {
+        result = new Result();
+        req.session.destroy(function(err) {
+            if (err == null) {
+                result.success = true; //
+            }
+            // console.log('exitlogin');
+        })
+        result.message = "操作成功" //
+        resp.send(result)
+    },
     register(req, resp) {
         const Phone = req.body.Phone;
         const Password = req.body.Password;
         let sql = `INSERT INTO s_userinfo (Account,PASSWORD,Phone) VALUES('${Phone}','${Password}','${Phone}')`
-        console.log(sql);
-
+            // console.log(sql);
         db.connect(sql, [], (err, data) => {
             result = new Result();
             // console.log(err);
@@ -71,7 +83,11 @@ const indexdao = {
 
     getUserInfo(req, resp) {
 
-
+        let userInfo = com.getUserSession(req, resp);
+        if (userInfo == null) {
+            return;
+        }
+        let UId = userInfo.data.UId;
         let sql = `SELECT * FROM  s_userinfo WHERE  UId=${UId}`
         console.log(sql);
 
@@ -93,6 +109,8 @@ const indexdao = {
         const Birthday = req.body.Birthday;
         const Code = req.body.Code;
         let Birthday = a.substring(0, 10);
+        let userInfo = com.getUserSession(req, resp);
+        let UId = userInfo.data.UId;
         let sql = ` UPDATE  S_UserInfo SET NAME='${Name}' ,Sex=${Sex} ,Birthday='${Birthday}',CODE='${Code}' WHERE UId=${UId} `
         console.log(sql);
         db.connect(sql, [], (err, data) => {
@@ -107,6 +125,8 @@ const indexdao = {
     },
     updataPass(req, resp) {
         const PassWord = req.body.PassWord;
+        let userInfo = com.getUserSession(req, resp);
+        let UId = userInfo.data.UId;
         let sql = ` UPDATE  S_UserInfo SET PassWord='${PassWord}' WHERE UId=${UId} `
         console.log(sql);
         db.connect(sql, [], (err, data) => {
@@ -121,7 +141,8 @@ const indexdao = {
     },
     //我的评论
     getComment(req, resp) {
-
+        let userInfo = com.getUserSession(req, resp);
+        let UId = userInfo.data.UId;
         let sql = `
         
 
@@ -174,6 +195,8 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
     updataUserINV(req, resp) {
         const InvoiceType = req.body.InvoiceType;
         const Inv_Content = req.body.Inv_Content;
+        let userInfo = com.getUserSession(req, resp);
+        let UId = userInfo.data.UId;
         let sql = ` UPDATE  S_UserInfo SET InvoiceType='${InvoiceType}' ,Inv_Content=${Inv_Content}  WHERE UId=${UId} `
             // console.log(sql);
         db.connect(sql, [], (err, data) => {
@@ -188,7 +211,13 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
     },
     //我的消息列表
     getMyMessage(req, resp) {
-
+        let userInfo = com.getUserSession(req, resp);
+        result = new Result();
+        if (userInfo == null) {
+            result.message = "您还没有登录" //成功描述
+            resp.send(result)
+        }
+        let UId = userInfo.data.UId;
         let sql = ` SELECT *,
     CASE Message_Type WHEN 1  THEN '活动通知' WHEN  2 THEN '优惠券发放' WHEN 3  THEN '积分变动' ELSE '其它' END Message
     FROM S_Message  WHERE UId=${UId} `
@@ -205,7 +234,8 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
     },
     //我的有货信息
     getMyMessage(req, resp) {
-
+        let userInfo = com.getUserSession(req, resp);
+        let UId = userInfo.data.UId;
         let sql = ` SELECT * FROM S_Address  WHERE UId=${UId} `
             //  console.log(sql);
         db.connect(sql, [], (err, data) => {
@@ -220,7 +250,9 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
     },
     //我的收获地址
     getMyAddress(req, resp) {
-        let sql = ` SELECT * FROM s_address WHERE  UId=3 `;
+        let userInfo = com.getUserSession(req, resp);
+        let UId = userInfo.data.UId;
+        let sql = ` SELECT * FROM s_address WHERE  UId=${UId} `;
         console.log(sql)
         db.connect(sql, [], (err, data) => {
             result = new Result();
@@ -245,7 +277,8 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
         const Phone = req.body.Phone;
         const Tel = req.body.Tel;
         const Is_True = req.body.Is_True;
-        const UId = req.body.UId;
+        let userInfo = com.getUserSession(req, resp);
+        let UId = userInfo.data.UId;
         // console.log(req.body)
         let sql;
         if (Is_True) {
@@ -269,6 +302,8 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
     },
     //修改收获地址
     updateMyAddress(req, resp) {
+        let userInfo = com.getUserSession(req, resp);
+        let UId = userInfo.data.UId;
         const S_Name = req.body.S_Name;
         const Province = req.body.Province;
         const City = req.body.City;
@@ -325,6 +360,8 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
     //查询用户付款方式
     getPayWay(req, rep) {
         // let Id = req.query.Id;
+        let userInfo = com.getUserSession(req, resp);
+        let UId = userInfo.data.UId;
         let sql = ` select * from S_User_PayWay WHERE  UId=${UId}`
         db.connect(sql, [], (err, data) => {
             result = new Result();

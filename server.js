@@ -9,8 +9,12 @@ const route = require("./routes/indexRouter") //引入自己的路由模块
 var log4js = require('log4js');
 var path = require("path");
 var ws = require("ws");
+// const { getMenu } = require('./dao/commondao');
 const app = express(); //执行express 全局函数，返回一个express服务器对象
 const port = 8888;
+
+const commonController = require("./controller/commonController");
+const userController = require("./controller/userController");
 //2.日志模块：记录每次请求信息，并在调试台看到
 // app.use(logger("dev"));logger
 app.use(cookieParser('sessiontest'));
@@ -51,6 +55,42 @@ app.use(bodyParser.json());
 //     }
 // });
 
+
+
+//1.设置静态资源路径
+app.use(express.static(__dirname + "/dist")); //__dirname 指向当前文件的根目录
+
+// app.get('/**', (req, res) => {
+//     const url = req.url;
+//     console.log(url)
+//     if (/^\/api/.test(url)) {
+//         console.log(typeof url)
+//         const urlSplit = url.split('/');
+//         const apiName = urlSplit[urlSplit.length - 1].split('.')[0];
+//         console.log(apiName)
+//         commonController[apiName] && commonController[apiName](req, res)
+//         userController[apiName] && userController[apiName](req, res)
+//         return
+//     }
+//     res.render(__dirname + '/dist/index.ejs', {
+//         user: req.session.userinfo
+//     });
+// })
+
+
+// app.post('/**', (req, res) => {
+//     const url = req.url;
+//     console.log(url)
+//     if (/^\/api/.test(url)) {
+//         console.log(typeof url)
+//         const urlSplit = url.split('/');
+//         const apiName = urlSplit[urlSplit.length - 1].split('.')[0];
+//         console.log(apiName)
+//         commonController[apiName] && commonController[apiName](req, res)
+//         userController[apiName] && userController[apiName](req, res)
+//         return
+//     }
+// })
 
 
 
