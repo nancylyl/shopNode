@@ -2,7 +2,7 @@ const db = require("../config/dbpoolconfig");
 const Result = require("../config/ActionResult");
 var date = require("silly-datetime");
 const session = require("express-session");
-
+const com = require('./commondao');
 const indexdao = {
 
     /* 产品详情 */
@@ -45,14 +45,16 @@ const indexdao = {
             let bodydata = req.body;
             // console.log(this);
 
-            let Sort = req.Sort;
+            let orderby = bodydata.orderby;
+            let sortName = bodydata.sortName;
             let PageCount = bodydata.PageCount;
             let CurrentPage = bodydata.CurrentPage;
             let KeyName = bodydata.key;
+
             let P_Type_Menu_Id = bodydata.P_Type_Menu_Id; //产品类型
-            let Prod_Type_Id = bodydata.Prod_Type_Id; //尺寸 尺寸：卧室用品 0 无1 .2.0米 2.1.8米 3.1.5米4. 1.2米
-            let Prod_Dec_Type = bodydata.Prod_Dec_Type; //所属标题分类类型 如果是卧室用品 类型 0.无1.纯色2.磨毛3.条纹.4.印花5.绣花0 纯色1 格子2条纹3印花
-            let Root_Type_Id = bodydata.Root_Type_Id; //根数：1.240根2.300根3.350根4.600根5.枕头6..床单被罩枕巾单品7.靠垫/靠垫套  0为无
+            let Prod_Type_Id = bodydata.size; //尺寸 尺寸：卧室用品 0 无1 .2.0米 2.1.8米 3.1.5米4. 1.2米
+            let Prod_Dec_Type = bodydata.type; //所属标题分类类型 如果是卧室用品 类型 0.无1.纯色2.磨毛3.条纹.4.印花5.绣花0 纯色1 格子2条纹3印花
+            let Root_Type_Id = bodydata.root; //根数：1.240根2.300根3.350根4.600根5.枕头6..床单被罩枕巾单品7.靠垫/靠垫套  0为无
 
             let where = ' where 1=1 ';
             // console.log(P_Type_Menu_Id);
@@ -115,20 +117,20 @@ const indexdao = {
             }
 
             sql = sql + where;
-            if (Sort == 1 || Sort == 2) {
-                sql += ' order by CreateDate desc'
-            } else if (Sort == 3) {
-                sql += ' order by Price  asc'
-            } else if (Sort == 4) {
-                sql += ' order by Price  desc'
+            console.log(sortName);
+
+            if (sortName != '' && sortName != undefined) {
+                sql += ` order by ${sortName}  ${orderby}`
             }
-            // console.log(sql);
+
+            console.log(sql);
             let nowdata = [];
             const that = this;
             db.connectPage(sql, [], PageCount, CurrentPage, async(err, data) => {
                 result = new Result();
                 if (err == null) {
-                    result.total = data[0][0].count; //返回总数量
+                    let totalSize = Math.ceil(parseInt(data[0][0].count) / PageCount)
+
                     nowdata = data[1];
                     //查询产品对应的图片
                     for (var i = 0; i < nowdata.length; i++) {
@@ -136,10 +138,13 @@ const indexdao = {
                         const returnMess = await that.getImages(item.Pro_Id);
                         nowdata[i].children = returnMess.data;
                     }
-                    // console.log(nowdata)
+                    console.log(result.total);
                     result.data = nowdata; //列表显示条数
                     result.success = true; //返回成功
+                    result.total = totalSize; //返回总数量
                     result.message = "查询成功！" //成功描述
+                        // console.log(result);
+
                     resp.send(result)
 
                 } else {

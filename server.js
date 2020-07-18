@@ -15,6 +15,7 @@ const port = 8888;
 
 const commonController = require("./controller/commonController");
 const userController = require("./controller/userController");
+const productController = require("./controller/productController");
 //2.日志模块：记录每次请求信息，并在调试台看到
 // app.use(logger("dev"));logger
 app.use(cookieParser('sessiontest'));
@@ -64,16 +65,16 @@ app.use(express.static(__dirname + "/dist")); //__dirname 指向当前文件的�
 //     const url = req.url;
 //     console.log(url)
 //     if (/^\/api/.test(url)) {
-//         console.log(typeof url)
 //         const urlSplit = url.split('/');
 //         const apiName = urlSplit[urlSplit.length - 1].split('.')[0];
-//         console.log(apiName)
 //         commonController[apiName] && commonController[apiName](req, res)
 //         userController[apiName] && userController[apiName](req, res)
 //         return
 //     }
+
+//     console.log(req.session.userInfo)
 //     res.render(__dirname + '/dist/index.ejs', {
-//         user: req.session.userinfo
+//         user: req.session.userInfo
 //     });
 // })
 
@@ -82,10 +83,8 @@ app.use(express.static(__dirname + "/dist")); //__dirname 指向当前文件的�
 //     const url = req.url;
 //     console.log(url)
 //     if (/^\/api/.test(url)) {
-//         console.log(typeof url)
 //         const urlSplit = url.split('/');
 //         const apiName = urlSplit[urlSplit.length - 1].split('.')[0];
-//         console.log(apiName)
 //         commonController[apiName] && commonController[apiName](req, res)
 //         userController[apiName] && userController[apiName](req, res)
 //         return
@@ -95,7 +94,26 @@ app.use(express.static(__dirname + "/dist")); //__dirname 指向当前文件的�
 
 
 
+
+app.use((req, res, next) => {
+    if (/^\/api/.test(req.url)) {
+        next();
+        return
+    }
+
+    res.render(__dirname + '/dist/index.ejs', {
+        user: req.session.userInfo
+    });
+    next();
+});
+
+
+
+
 app.use(route); //使用自己定义路由模块
+
+
+
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
 
 /*  -----------------------------------webScoket---------------------- */
