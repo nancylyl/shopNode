@@ -105,10 +105,10 @@ const indexdao = {
     },
     updataUserInfo(req, resp) {
         const Name = req.body.Name;
-        const sex = req.body.sex;
-        const Birthday = req.body.Birthday;
+        const Sex = req.body.Sex;
+        const a = req.body.Birthday;
         const Code = req.body.Code;
-        let Birthday = a.substring(0, 10);
+        let Birthday = a.substring(0,10);
         let userInfo = com.getUserSession(req, resp);
         let UId = userInfo.data.UId;
         let sql = ` UPDATE  S_UserInfo SET NAME='${Name}' ,Sex=${Sex} ,Birthday='${Birthday}',CODE='${Code}' WHERE UId=${UId} `
@@ -118,6 +118,22 @@ const indexdao = {
             if (err == null) {
                 result.success = true; //返回成功
                 // result.data = data;
+                result.message = "修改成功" //成功描述
+                resp.send(result)
+            }
+        });
+    },
+    newPhone(req, resp){
+        const Phone=req.body.Phone;
+        let userInfo = com.getUserSession(req, resp);
+        let UId = userInfo.data.UId;
+        let sql = ` UPDATE  s_userinfo SET Phone='${Phone}' WHERE UId=${UId} `
+        console.log(sql)
+        db.connect(sql, [], (err, data) => {
+            result = new Result();
+            if (err == null) {
+                result.success = true; //返回成功
+                result.data = data;
                 result.message = "修改成功" //成功描述
                 resp.send(result)
             }
@@ -191,14 +207,40 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
         })
 
     },
+
+    //发票信息
+    getUserINV(req,resp){
+        let userInfo = com.getUserSession(req, resp);
+        let UId = userInfo.data.UId;
+        let sql = ` SELECT * FROM S_UserInfo  WHERE UId=${UId} `
+        console.log(sql)
+        db.connect(sql, [], (err, data) => {
+            result = new Result();
+            if (err == null) {
+                result.success = true; //返回成功
+                result.data = data;
+                result.message = "" //成功描述
+                resp.send(result)
+            }
+        });
+    },
+
+
+
+
+
+
+
     //修改用户发票信息
     updataUserINV(req, resp) {
         const InvoiceType = req.body.InvoiceType;
         const Inv_Content = req.body.Inv_Content;
+        const InvContentTypef=req.body.InvContentTypef;
         let userInfo = com.getUserSession(req, resp);
         let UId = userInfo.data.UId;
-        let sql = ` UPDATE  S_UserInfo SET InvoiceType='${InvoiceType}' ,Inv_Content=${Inv_Content}  WHERE UId=${UId} `
-            // console.log(sql);
+        let sql = ` UPDATE  S_UserInfo SET InvoiceType='${InvoiceType}' ,Inv_Content='${Inv_Content}' ,InvContentTypef='${InvContentTypef}'  WHERE UId=${UId} `
+            console.log(sql);
+        console.log(sql);
         db.connect(sql, [], (err, data) => {
             result = new Result();
             if (err == null) {
@@ -232,22 +274,22 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
             }
         });
     },
-    //我的有货信息
-    getMyMessage(req, resp) {
-        let userInfo = com.getUserSession(req, resp);
-        let UId = userInfo.data.UId;
-        let sql = ` SELECT * FROM S_Address  WHERE UId=${UId} `
-            //  console.log(sql);
-        db.connect(sql, [], (err, data) => {
-            result = new Result();
-            if (err == null) {
-                result.success = true; //返回成功
-                result.data = data;
-                result.message = "" //成功描述
-                resp.send(result)
-            }
-        });
-    },
+    // //我的有货信息
+    // getMyAddress(req, resp) {
+    //     let userInfo = com.getUserSession(req, resp);
+    //     let UId = userInfo.data.UId;
+    //     let sql = ` SELECT * FROM S_Address  WHERE UId=${UId} `
+    //         //  console.log(sql);
+    //     db.connect(sql, [], (err, data) => {
+    //         result = new Result();
+    //         if (err == null) {
+    //             result.success = true; //返回成功
+    //             result.data = data;
+    //             result.message = "" //成功描述
+    //             resp.send(result)
+    //         }
+    //     });
+    // },
     //我的收获地址
     getMyAddress(req, resp) {
         let userInfo = com.getUserSession(req, resp);
@@ -285,7 +327,7 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
             sql = `update s_address set Is_True=0 where UId=${UId}`;
         }
 
-        sql += `INSERT INTO s_address (UId,S_Name,Province,City,Area,Address,Mail,Phone,Tel,Is_True) VALUES(${UId},'${S_Name}','${Province}','${City}','${Area}','${Address}','${Mail}','${Phone}','${Tel}',${Is_True})`;
+        sql = `INSERT INTO s_address (UId,S_Name,Province,City,Area,Address,Mail,Phone,Tel,Is_True) VALUES(${UId},'${S_Name}','${Province}','${City}','${Area}','${Address}','${Mail}','${Phone}','${Tel}',${Is_True})`;
 
         db.connect(sql, [], (err, data) => {
             console.log(err)
@@ -318,7 +360,7 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
         if (Is_True) {
             sql = `update s_address set Is_True=0 where UId=${UId};`;
         }
-        sql += ` update s_address set
+        sql = ` update s_address set
                     S_Name= '${S_Name}', 
                     Province= '${Province}', 
                     City='${City}', 
