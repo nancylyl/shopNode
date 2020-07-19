@@ -460,5 +460,125 @@ const indexdao = {
         });
     },
 
+
+
+    /*数据库收藏产品*/
+    userCollect(req,resp){
+        let UId = req.body.UId;
+        let PId = req.body.PId;
+        console.log(req.body.UId);
+
+        let sql = `insert into s_collect_share_detail (UId,PID) values('${UId}','${PId}')`;
+        console.log(sql);
+        db.connect(sql, [], (err, data) => {
+            result = new Result();
+            if (err == null) {
+                result.data = data; //列表显示条数
+                // console.log(data);
+
+                result.success = true; //返回成功
+                result.message = "插入数据成功！" //成功描述
+
+                resp.send(result)
+            } else {
+                console.log(err);
+                result.message = "插入数据失败！"
+                resp.send(result)
+
+            }
+
+        });
+    },
+
+
+    /*获取用户收藏产品ID*/
+    myPro(req,resp){
+        console.log(123)
+        let UId = req.query.UId;
+        console.log(req.query.UId);
+
+        let sql = `select PId from s_collect_share_detail where UId=${UId}`;
+        console.log(sql);
+        db.connect(sql, [], (err, data) => {
+            result = new Result();
+            if (err == null) {
+                result.data = data; //列表显示条数
+                // console.log(data);
+
+                result.success = true; //返回成功
+                result.message = "查询收藏产品ID成功！" //成功描述
+
+                resp.send(result)
+            } else {
+                console.log(err);
+                result.message = "查询收藏产品ID失败！"
+                resp.send(result)
+
+            }
+
+        });
+    },
+
+
+
+    /*展示收藏产品的图片路径*/
+    proSrc(req,resp){
+        console.log(456)
+        let PId = req.query.PId;
+        // console.log(req.query.PId);
+
+        let sql = `select Pro_Url,(select Pro_Name from s_product where Pro_Id=${PId}) as Pro_Name,(select Price from s_product where Pro_Id=${PId}) as Price from s_productpic where Pro_Id=${PId} limit 1`;
+        console.log(sql);
+        db.connect(sql, [], (err, data) => {
+            result = new Result();
+            if (err == null) {
+                result.data = data; //列表显示条数
+                // console.log(data);
+
+                result.success = true; //返回成功
+                result.message = "查询收藏产品图片路径成功！" //成功描述
+
+                resp.send(result)
+            } else {
+                console.log(err);
+                result.message = "查询收藏产品图片路径失败！"
+                resp.send(result)
+
+            }
+
+        });
+    },
+
+
+
+    /*删除收藏产品*/
+    deletePro(req,resp){
+        console.log(999)
+        let PId = req.body.PId;
+        let UId= req.body.UId;
+        // console.log(req.query.PId);
+
+        let sql = `delete from s_collect_share_detail where PId=${PId} and UId=${UId}`;
+        console.log(sql);
+        db.connect(sql, [], (err, data) => {
+            result = new Result();
+            if (err == null) {
+                result.data = data; //列表显示条数
+                // console.log(data);
+
+                result.success = true; //返回成功
+                result.message = "删除收藏产品成功！" //成功描述
+
+                resp.send(result)
+            } else {
+                console.log(err);
+                result.message = "删除收藏产品失败！"
+                resp.send(result)
+
+            }
+
+        });
+    }
+
 }
 module.exports = indexdao;

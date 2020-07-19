@@ -38,7 +38,7 @@ router.post('/api/register.do', userController.register) //注册信息
 router.get('/api/getUserInfo.do', userController.getUserInfo) //获取用户信息
 router.post('/api/updataUserInfo.do', userController.updataUserInfo) //修改用户信息
 router.post('/api/updataPass.do', userController.updataPass) //修改用户密码
-router.post('/api/getComment.do', userController.getComment) //用户评论
+router.post('/api/getComment.do', userController.getUserComment) //用户评论
 router.post('/api/updataUserINV.do', userController.updataUserINV) //用户评论
 router.get('/api/getMyMessage.do', userController.getMyMessage) //用户消息信息
 router.get('/api/getMyAddress.do', userController.getMyAddress) //我的收获地址
@@ -67,7 +67,7 @@ router.get('/api/proSrc.do', productController.proSrc)
 // router.get('/api/proPriceTitle.do',productController.proPriceTitle)
 
 /*删除收藏产品的ID*/
-router.get('/api/theProId.do', productController.thePicId)
+// router.get('/api/theProId.do', productController.thePicId)
 
 /*删除收藏产品*/
 router.post('/api/deletePro.do', productController.deletePro)
