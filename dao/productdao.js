@@ -449,11 +449,11 @@ const indexdao = {
             if (err == null) {
                 result.success = true; //返回成功
                 //查询产品对应的图片
-                for (var i = 0; i < data.length; i++) {
-                    let item = data[i];
-                    const returnMess = await that.getCommentImages(item.CId);
-                    data[i].children = returnMess.data;
-                }
+                // for (var i = 0; i < data.length; i++) {
+                //     let item = data[i];
+                //     const returnMess = await that.getCommentImages(item.CId);
+                //     data[i].children = returnMess.data;
+                // }
                 result.data = data;
                 result.message = "查询成功" //成功描述
                 resp.send(result)
