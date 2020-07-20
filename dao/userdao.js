@@ -59,10 +59,10 @@ const indexdao = {
     register: async function(req, resp) {
 
         const Phone = req.body.Phone;
-<<<<<<< HEAD
+
         const Password = req.body.PassWord;
         let sql = `INSERT INTO s_userinfo (Account,PASSWORD,Phone) VALUES('${Phone}','${Password}','${Phone}')`
-=======
+
         const PassWord = req.body.PassWord;
         result = new Result();
 
@@ -77,8 +77,8 @@ const indexdao = {
             return
         }
 
-        let sql = `INSERT INTO s_userinfo (Account,PASSWORD,Phone) VALUES('${Phone}','${PassWord}','${Phone}')`
->>>>>>> 63ca4f4114d5bcceecbb8e64f26cc3c68693f3b2
+        // let sql = `INSERT INTO s_userinfo (Account,PASSWORD,Phone) VALUES('${Phone}','${PassWord}','${Phone}')`
+
             // console.log(sql);
         db.connect(sql, [], (err, data) => {
 
