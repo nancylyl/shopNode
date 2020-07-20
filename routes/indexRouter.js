@@ -39,9 +39,11 @@ router.get('/api/getUserInfo.do', userController.getUserInfo) //获取用户信�
 router.post('/api/updataUserInfo.do', userController.updataUserInfo) //修改用户信息
 router.post('/updataPhoe.do',userController.newPhone);//修改用户电话
 router.post('/api/updataPass.do', userController.updataPass) //修改用户密码
-router.post('/api/getComment.do', userController.getComment) //用户评论
+// router.post('/api/getComment.do', userController.getComment) //用户评论
 router.post('/api/updataUserINV.do', userController.updataUserINV) //发票信息修改
 router.get('/api/getUserINV.do', userController.getUserINV) //发票信息
+router.post('/api/getComment.do', userController.getUserComment) //用户评论
+router.post('/api/updataUserINV.do', userController.updataUserINV) //用户评论
 router.get('/api/getMyMessage.do', userController.getMyMessage) //用户消息信息
 router.get('/api/getMyAddress.do', userController.getMyAddress) //我的收获地址
 router.post('/api/addMyAddress.do', userController.addMyAddress) //添加我的收获地址
@@ -50,11 +52,6 @@ router.post('/api/delMyAddress.do', userController.delMyAddress) //删除我的�
 router.get('/api/getPayWay.do', userController.getPayWay) //得到付款方式
 router.post('/api/addOrUpdatePayWay.do', userController.addOrUpdatePayWay) //修改，添加付款方式
 router.post('/api/addComment.do', userController.addComment)
-
-
-
-
-
 
 /*收藏产品*/
 router.post('/api/collect.do', productController.collect);
@@ -69,7 +66,7 @@ router.get('/api/proSrc.do', productController.proSrc)
 // router.get('/api/proPriceTitle.do',productController.proPriceTitle)
 
 /*删除收藏产品的ID*/
-router.get('/api/theProId.do', productController.thePicId)
+// router.get('/api/theProId.do', productController.thePicId)
 
 /*删除收藏产品*/
 router.post('/api/deletePro.do', productController.deletePro)

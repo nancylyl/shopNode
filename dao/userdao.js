@@ -24,6 +24,7 @@ const indexdao = {
                         //  req.session.userinfo = userinfo[0];
                         //  result.data = userinfo[0];
                     req.session.userInfo = data[0];
+                    console.log(data[0]);
                     // console.log(JSON.stringify(data, null, 2));
 
                     result.data = data[0];
@@ -55,13 +56,32 @@ const indexdao = {
         result.message = "操作成功" //
         resp.send(result)
     },
-    register(req, resp) {
+    register: async function(req, resp) {
+
         const Phone = req.body.Phone;
-        const Password = req.body.Password;
+
+        const Password = req.body.PassWord;
         let sql = `INSERT INTO s_userinfo (Account,PASSWORD,Phone) VALUES('${Phone}','${Password}','${Phone}')`
+
+        const PassWord = req.body.PassWord;
+        result = new Result();
+
+        let userinfo = await this.IsExitName(Phone);
+        userinfo = JSON.parse(JSON.stringify(userinfo));
+
+        if (userinfo[0].count > 0) {
+
+            result.success = false;
+            result.message = "该用户已存在"
+            resp.send(result);
+            return
+        }
+
+        // let sql = `INSERT INTO s_userinfo (Account,PASSWORD,Phone) VALUES('${Phone}','${PassWord}','${Phone}')`
+
             // console.log(sql);
         db.connect(sql, [], (err, data) => {
-            result = new Result();
+
             // console.log(err);
             if (err == null) {
                 // console.log(data);
@@ -76,11 +96,18 @@ const indexdao = {
                 result.message = "注册成功！"
                 resp.send(result)
             }
-
         });
-
     },
-
+    /* 是否存在该用户 */
+    IsExitName(Account) {
+        return new Promise((resolve, reject) => {
+            let sql = ` select count(*)count from s_userinfo where Account='${Account}'`;
+            db.connect(sql, [], (err, data) => {
+                resolve(data);
+                return
+            })
+        })
+    },
     getUserInfo(req, resp) {
 
         let userInfo = com.getUserSession(req, resp);
@@ -108,7 +135,10 @@ const indexdao = {
         const Sex = req.body.Sex;
         const a = req.body.Birthday;
         const Code = req.body.Code;
+
         let Birthday = a.substring(0,10);
+
+        let Birthday1 = a.substring(0, 10);
         let userInfo = com.getUserSession(req, resp);
         let UId = userInfo.data.UId;
         let sql = ` UPDATE  S_UserInfo SET NAME='${Name}' ,Sex=${Sex} ,Birthday='${Birthday}',CODE='${Code}' WHERE UId=${UId} `
@@ -162,7 +192,7 @@ const indexdao = {
         let sql = `
         
 
-SELECT t1.*,t2.pro_name,pro_title,t2.price,t3.pro_url FROM S_CommentDetail t1
+SELECT /*t1.Pid,*/t1.OId,t3.pro_url,t2.pro_name,t2.price,t1.Star,t1.Content FROM S_CommentDetail t1
 JOIN S_Product t2 ON t1.PId= t2.Pro_Id
  LEFT JOIN 
  (
@@ -171,7 +201,7 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
     )
  )t3 ON t3.Pro_Id=t2.Pro_Id
  
- JOIN  S_OrderDetail t4 ON  t4.ID=t1.OId WHERE t4.UId=${UId}
+ JOIN  S_OrderDetail t4 ON  t4.OrderNum=t1.OId WHERE t4.UId=${UId}
  
           `
         db.connect(sql, [], async(err, data) => {
@@ -185,7 +215,10 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
                     data[i].children = returnMess.data;
                 }
                 result.data = data;
-                result.message = "查询成功" //成功描述
+                result.message = "查询用户评论成功" //成功描述
+                resp.send(result)
+            }else {
+                result.message = "查询用户评论失败" //成功描述
                 resp.send(result)
             }
         });
@@ -274,6 +307,7 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
             }
         });
     },
+
     // //我的有货信息
     // getMyAddress(req, resp) {
     //     let userInfo = com.getUserSession(req, resp);
@@ -290,6 +324,9 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
     //         }
     //     });
     // },
+
+
+
     //我的收获地址
     getMyAddress(req, resp) {
         let userInfo = com.getUserSession(req, resp);
@@ -485,5 +522,45 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
 
     },
 
+
+
+    /*个人中心--我的评论*/
+    getUserComment(req,resp){
+        let userInfo = com.getUserSession(req, resp);
+        let UId = userInfo.data.UId;
+        let sql = `
+        
+
+SELECT /*t1.Pid,*/t1.OId,t3.pro_url,t2.pro_name,t2.price,t1.Star,t1.Content FROM S_CommentDetail t1
+JOIN S_Product t2 ON t1.PId= t2.Pro_Id
+ LEFT JOIN 
+ (
+   SELECT * FROM S_ProductPic WHERE id IN(
+        SELECT MIN(id) FROM S_ProductPic WHERE TYPE=3 GROUP BY Pro_Id
+    )
+ )t3 ON t3.Pro_Id=t2.Pro_Id
+ 
+ JOIN  S_OrderDetail t4 ON  t4.OrderNum=t1.OId WHERE t4.UId=${UId}
+ 
+          `
+        db.connect(sql, [], (err, data) => {
+            result = new Result();
+            if (err == null) {
+                result.success = true; //返回成功
+                //查询产品对应的图片
+                /*for (var i = 0; i < data.length; i++) {
+                    let item = data[i];
+                    const returnMess = await that.getCommentImages(item.CId);
+                    data[i].children = returnMess.data;
+                }*/
+                result.data = data;
+                result.message = "查询用户评论成功" //成功描述
+                resp.send(result)
+            }else {
+                result.message = "查询用户评论失败" //成功描述
+                resp.send(result)
+            }
+        });
+    }
 }
 module.exports = indexdao;

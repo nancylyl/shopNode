@@ -21,8 +21,8 @@ const userController = {
         updataPass(res, resp) {
             dao.updataPass(res, resp);
         },
-        getComment(res, resp) {
-            dao.getComment(res, resp);
+        getUserComment(res, resp) {
+            dao.getUserComment(res, resp);
         },
         updataUserINV(res, resp) {
             dao.updataUserINV(res, resp);
