@@ -408,7 +408,7 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
         const Is_True = req.body.Is_True;
         const Id = req.body.Id;
         let sql;
-        if (Is_True) {
+        if (Is_True == 1) {
             sql = `update s_address set Is_True=0 where UId=${UId};`;
         }
         sql = ` update s_address set
