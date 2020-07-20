@@ -232,9 +232,10 @@ const indexdao = {
         //console.log(UId);
         let userInfo = com.getUserSession(req, resp);
         let UId = userInfo.data.UId;
+        console.log(req.query.state);
         let state = 0;
         try {
-            state = req.query.State;
+            state = req.query.state;
         } catch {}
         let sql = `
         SELECT '新用户' userTypeName,NAME,
@@ -250,20 +251,19 @@ const indexdao = {
          ) 
          t2 ON t1.PId=t2.Pro_Id
          JOIN S_Product t3 ON t3.Pro_Id=t2.Pro_Id
-          WHERE Uid=${UId} ;
+          WHERE Uid=${UId} 
 
-          SELECT  ordernum,SUM(price*num ) TotalPrice,State,CreateDate,New_Name FROM s_orderdetail
-          WHERE Uid=${UId} GROUP BY ordernum,State,CreateDate,New_Name ;
-          
           `;
         if (state > -1) {
             if (state == 1) {
                 state = 12
             }
-            sql += " and t1.state=" + state + ""
+            sql += " and t1.state=" + state + ";"
 
         }
-        //console.log(sql);
+        sql += `   SELECT  ordernum,SUM(price*num ) TotalPrice,State,CreateDate,New_Name FROM s_orderdetail
+        WHERE Uid=${UId} GROUP BY ordernum,State,CreateDate,New_Name ;`
+            // console.log(sql);
         db.connect(sql, [], (err, data) => {
             result = new Result();
             if (err == null) {
