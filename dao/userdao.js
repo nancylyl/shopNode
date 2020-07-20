@@ -202,16 +202,17 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
  JOIN  S_OrderDetail t4 ON  t4.OrderNum=t1.OId WHERE t4.UId=${UId}
  
           `
+
         db.connect(sql, [], async(err, data) => {
             result = new Result();
             if (err == null) {
                 result.success = true; //返回成功
                 //查询产品对应的图片
-                for (var i = 0; i < data.length; i++) {
-                    let item = data[i];
-                    const returnMess = await that.getCommentImages(item.CId);
-                    data[i].children = returnMess.data;
-                }
+                // for (var i = 0; i < data.length; i++) {
+                //     let item = data[i];
+                //     const returnMess = await that.getCommentImages(item.CId);
+                //     data[i].children = returnMess.data;
+                // }
                 result.data = data;
                 result.message = "查询用户评论成功" //成功描述
                 resp.send(result)
@@ -541,6 +542,7 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
  JOIN  S_OrderDetail t4 ON  t4.OrderNum=t1.OId WHERE t4.UId=${UId}
  
           `
+        console.log(sql);
         db.connect(sql, [], (err, data) => {
             result = new Result();
             if (err == null) {
