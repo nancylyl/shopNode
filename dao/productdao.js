@@ -73,7 +73,7 @@ const indexdao = {
 
 
                 if (KeyName != undefined && KeyName != null && KeyName != '') {
-                    where += ` and Pro_Name='${KeyName}'`;
+                    where += ` and Pro_Name like '%${KeyName}%'`;
                 }
             } catch {}
 

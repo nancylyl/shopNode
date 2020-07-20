@@ -56,13 +56,32 @@ const indexdao = {
         result.message = "操作成功" //
         resp.send(result)
     },
-    register(req, resp) {
+    register: async function(req, resp) {
+
         const Phone = req.body.Phone;
+<<<<<<< HEAD
         const Password = req.body.PassWord;
         let sql = `INSERT INTO s_userinfo (Account,PASSWORD,Phone) VALUES('${Phone}','${Password}','${Phone}')`
+=======
+        const PassWord = req.body.PassWord;
+        result = new Result();
+
+        let userinfo = await this.IsExitName(Phone);
+        userinfo = JSON.parse(JSON.stringify(userinfo));
+
+        if (userinfo[0].count > 0) {
+
+            result.success = false;
+            result.message = "该用户已存在"
+            resp.send(result);
+            return
+        }
+
+        let sql = `INSERT INTO s_userinfo (Account,PASSWORD,Phone) VALUES('${Phone}','${PassWord}','${Phone}')`
+>>>>>>> 63ca4f4114d5bcceecbb8e64f26cc3c68693f3b2
             // console.log(sql);
         db.connect(sql, [], (err, data) => {
-            result = new Result();
+
             // console.log(err);
             if (err == null) {
                 // console.log(data);
@@ -77,11 +96,18 @@ const indexdao = {
                 result.message = "注册成功！"
                 resp.send(result)
             }
-
         });
-
     },
-
+    /* 是否存在该用户 */
+    IsExitName(Account) {
+        return new Promise((resolve, reject) => {
+            let sql = ` select count(*)count from s_userinfo where Account='${Account}'`;
+            db.connect(sql, [], (err, data) => {
+                resolve(data);
+                return
+            })
+        })
+    },
     getUserInfo(req, resp) {
 
         let userInfo = com.getUserSession(req, resp);
@@ -236,22 +262,7 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
             }
         });
     },
-    //我的有货信息
-    getMyMessage(req, resp) {
-        let userInfo = com.getUserSession(req, resp);
-        let UId = userInfo.data.UId;
-        let sql = ` SELECT * FROM S_Address  WHERE UId=${UId} `
-            //  console.log(sql);
-        db.connect(sql, [], (err, data) => {
-            result = new Result();
-            if (err == null) {
-                result.success = true; //返回成功
-                result.data = data;
-                result.message = "" //成功描述
-                resp.send(result)
-            }
-        });
-    },
+
     //我的收获地址
     getMyAddress(req, resp) {
         let userInfo = com.getUserSession(req, resp);
