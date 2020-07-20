@@ -233,7 +233,15 @@ const indexdao = {
         let userInfo = com.getUserSession(req, resp);
         let UId = userInfo.data.UId;
         console.log(req.query.state);
-        let state = 0;
+        let state = req.query.state;
+        let datawhere = '';
+        if (state > -1) {
+            if (state == 1) {
+                state = 12
+            }
+            datawhere += " and t1.state=" + state + ""
+
+        }
         try {
             state = req.query.state;
         } catch {}
@@ -251,19 +259,13 @@ const indexdao = {
          ) 
          t2 ON t1.PId=t2.Pro_Id
          JOIN S_Product t3 ON t3.Pro_Id=t2.Pro_Id
-          WHERE Uid=${UId} 
+          WHERE Uid=${UId} ${datawhere}
 
           `;
-        if (state > -1) {
-            if (state == 1) {
-                state = 12
-            }
-            sql += " and t1.state=" + state + ";"
 
-        }
-        sql += `   SELECT  ordernum,SUM(price*num ) TotalPrice,State,CreateDate,New_Name FROM s_orderdetail
-        WHERE Uid=${UId} GROUP BY ordernum,State,CreateDate,New_Name ;`
-            // console.log(sql);
+        sql += ` ;  SELECT  ordernum,SUM(price*num ) TotalPrice,State,CreateDate,New_Name FROM s_orderdetail t1
+        WHERE Uid=${UId}  ${datawhere}  GROUP BY ordernum,State,CreateDate,New_Name ;`
+        console.log(sql);
         db.connect(sql, [], (err, data) => {
             result = new Result();
             if (err == null) {
@@ -393,10 +395,10 @@ const indexdao = {
                     0
                 );
     `;
-
-        // if(dataScore!=null)
-        // {
-        //     sql+=  `INSERT INTO s_integraldetail 
+        // let jfScore = 0;
+        // if (dataScore != null) {
+        //     jfScore = dataScore.jfScore;
+        //     sql += `INSERT INTO s_integraldetail 
         //     (
         //         UId,
         //         SourceID,
@@ -408,7 +410,7 @@ const indexdao = {
         //         ${UId},
         //         '${OrderNum}',
         //         1,
-        //         '用户购买商品赠送积分：${totalScore} '
+        //         '用户购买商品抵扣积分：${jfScore} '
         //     );
 
         //     INSERT INTO shopmanage.s_message 
@@ -422,12 +424,12 @@ const indexdao = {
         //         (
         //             ${UId},
         //             2,
-        //             '用户购买商品赠送积分：${totalScore}',
+        //             '用户购买商品抵扣积分：${jfScore}',
         //             0
         //         );`
         // }
-        // sql+=`    UPDATE s_userinfo SET SumScore=SumScore+${totalScore} WHERE UId=${UId} ;`
-        console.log(sql);
+        // sql += `    UPDATE s_userinfo SET SumScore=SumScore+${totalScore}-${jfScore} WHERE UId=${UId} ;`
+        // console.log(sql);
 
         db.connect(sql, [], (err, data) => {
             result = new Result();
