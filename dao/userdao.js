@@ -306,7 +306,22 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
             }
         });
     },
-
+    //我的消息列表
+    deleteMyMessage(req, resp) {
+        let message_Id = req.query.message_Id;
+        // console.log(req);
+        let sql = ` delete FROM S_Message  WHERE Message_Id=${message_Id} `
+        console.log(sql);
+        db.connect(sql, [], (err, data) => {
+            result = new Result();
+            if (err == null) {
+                result.success = true; //返回成功
+                result.data = data;
+                result.message = "" //成功描述
+                resp.send(result)
+            }
+        });
+    },
     // //我的有货信息
     // getMyAddress(req, resp) {
     //     let userInfo = com.getUserSession(req, resp);

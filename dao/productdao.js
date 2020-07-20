@@ -253,7 +253,7 @@ const indexdao = {
           WHERE Uid=${UId} ;
 
           SELECT  ordernum,SUM(price*num ) TotalPrice,State,CreateDate,New_Name FROM s_orderdetail
-          WHERE Uid=${UId} GROUP BY ordernum,State,CreateDate,New_Name;
+          WHERE Uid=${UId} GROUP BY ordernum,State,CreateDate,New_Name ;
           
           `;
         if (state > -1) {

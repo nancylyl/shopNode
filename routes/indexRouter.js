@@ -52,6 +52,7 @@ router.post('/api/delMyAddress.do', userController.delMyAddress) //删除我的�
 router.get('/api/getPayWay.do', userController.getPayWay) //得到付款方式
 router.post('/api/addOrUpdatePayWay.do', userController.addOrUpdatePayWay) //修改，添加付款方式
 router.post('/api/addComment.do', userController.addComment)
+router.get('/api/deleteMyMessage.do', userController.deleteMyMessage) //删除我的消息
 
 /*收藏产品*/
 router.post('/api/collect.do', productController.collect);

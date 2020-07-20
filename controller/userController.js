@@ -57,11 +57,14 @@ const userController = {
         addComment(res, resp) {
             dao.addComment(res, resp)
         },
-        newPhone(req,resp){
-        dao.newPhone(req, resp);
+        newPhone(req, resp) {
+            dao.newPhone(req, resp);
         },
-         getUserINV(res, resp) {
+        getUserINV(res, resp) {
             dao.getUserINV(res, resp)
+        },
+        deleteMyMessage(req, resp) {
+            dao.deleteMyMessage(req, resp)
         }
 
     }
