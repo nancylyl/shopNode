@@ -12,8 +12,6 @@ const commondao = {
             result.data = userInfo;
             return result;
         } else {
-            console.log('ddd');
-
             result.success = false;
             result.message = "您还没有登录，请先登录！"
             resp.send(result)
