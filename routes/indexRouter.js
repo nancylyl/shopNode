@@ -37,7 +37,11 @@ router.get('/api/exitLogin.do', userController.exitLogin) //退etUserInfo出登�
 router.post('/api/register.do', userController.register) //注册信息
 router.get('/api/getUserInfo.do', userController.getUserInfo) //获取用户信息
 router.post('/api/updataUserInfo.do', userController.updataUserInfo) //修改用户信息
+router.post('/api/updataPhoe.do',userController.newPhone);//修改用户电话
 router.post('/api/updataPass.do', userController.updataPass) //修改用户密码
+// router.post('/api/getComment.do', userController.getComment) //用户评论
+router.post('/api/updataUserINV.do', userController.updataUserINV) //发票信息修改
+router.get('/api/getUserINV.do', userController.getUserINV) //发票信息
 router.post('/api/getComment.do', userController.getUserComment) //用户评论
 router.post('/api/updataUserINV.do', userController.updataUserINV) //用户评论
 router.get('/api/getMyMessage.do', userController.getMyMessage) //用户消息信息

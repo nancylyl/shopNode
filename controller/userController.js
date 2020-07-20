@@ -3,9 +3,6 @@ const dao = require("../dao/userdao");
 // const logger = require("../config/logger");
 
 const userController = {
-        getUserInfo(req, resp) {
-            dao.getUserInfo(res, resp)
-        },
         login(res, resp) {
             dao.login(res, resp)
         },
@@ -59,6 +56,12 @@ const userController = {
 
         addComment(res, resp) {
             dao.addComment(res, resp)
+        },
+        newPhone(req,resp){
+        dao.newPhone(req, resp);
+        },
+         getUserINV(res, resp) {
+            dao.getUserINV(res, resp)
         }
 
     }
