@@ -288,6 +288,7 @@ const indexdao = {
         let userInfo = com.getUserSession(req, resp);
         let UId = userInfo.data.UId;
         let datas = req.body.data;
+        let dataScore = req.body.score;
         //  console.log(datas);
         const data = new Date();
         const lastdate = +data;
@@ -391,8 +392,41 @@ const indexdao = {
                     '用户购买商品赠送积分：${totalScore}',
                     0
                 );
-        UPDATE s_userinfo SET SumScore=SumScore+${totalScore} WHERE UId=${UId} ;`;
+    `;
 
+        // if(dataScore!=null)
+        // {
+        //     sql+=  `INSERT INTO s_integraldetail 
+        //     (
+        //         UId,
+        //         SourceID,
+        //         SourceTypeID,
+        //         Content
+        //     )
+        // VALUES
+        //     (
+        //         ${UId},
+        //         '${OrderNum}',
+        //         1,
+        //         '用户购买商品赠送积分：${totalScore} '
+        //     );
+
+        //     INSERT INTO shopmanage.s_message 
+        //         (
+        //         UId, 
+        //         Message_Type, 
+        //         Message_Text, 
+        //         State
+        //         )
+        //         VALUES
+        //         (
+        //             ${UId},
+        //             2,
+        //             '用户购买商品赠送积分：${totalScore}',
+        //             0
+        //         );`
+        // }
+        // sql+=`    UPDATE s_userinfo SET SumScore=SumScore+${totalScore} WHERE UId=${UId} ;`
         console.log(sql);
 
         db.connect(sql, [], (err, data) => {
