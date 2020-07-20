@@ -65,6 +65,9 @@ const userController = {
         },
         deleteMyMessage(req, resp) {
             dao.deleteMyMessage(req, resp)
+        },
+        getMyIntegralDetail(req, resp) {
+            dao.getMyIntegralDetail(req, resp)
         }
 
     }

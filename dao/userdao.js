@@ -538,7 +538,29 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
     },
 
 
-
+    //我的积分
+    getMyIntegralDetail(req, resp) {
+        let userInfo = com.getUserSession(req, resp);
+        result = new Result();
+        if (userInfo == null) {
+            result.message = "您还没有登录" //成功描述
+            resp.send(result)
+        }
+        let UId = userInfo.data.UId;
+        let sql = ` SELECT *,
+CASE SourceTypeID WHEN 1  THEN '购买产品' WHEN  2 THEN '评论' WHEN 3  THEN '注册' ELSE '其它' END Message
+FROM S_IntegralDetail  WHERE UId=${UId} `
+            //  console.log(sql);
+        db.connect(sql, [], (err, data) => {
+            result = new Result();
+            if (err == null) {
+                result.success = true; //返回成功
+                result.data = data;
+                result.message = "" //成功描述
+                resp.send(result)
+            }
+        });
+    },
     /*个人中心--我的评论*/
     getUserComment(req, resp) {
         let userInfo = com.getUserSession(req, resp);
