@@ -252,12 +252,16 @@ const indexdao = {
          JOIN S_Product t3 ON t3.Pro_Id=t2.Pro_Id
           WHERE Uid=${UId} ;
 
-          SELECT DISTINCT ordernum,SUM(price*num ) TotalPrice,State,CreateDate,New_Name FROM s_orderdetail
-          WHERE Uid=${UId} ;
+          SELECT  ordernum,SUM(price*num ) TotalPrice,State,CreateDate,New_Name FROM s_orderdetail
+          WHERE Uid=${UId} GROUP BY ordernum,State,CreateDate,New_Name;
           
           `;
-        if (state > 0) {
+        if (state > -1) {
+            if (state == 1) {
+                state = 12
+            }
             sql += " and t1.state=" + state + ""
+
         }
         //console.log(sql);
         db.connect(sql, [], (err, data) => {
