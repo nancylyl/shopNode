@@ -288,7 +288,7 @@ const indexdao = {
         const data = new Date();
         const lastdate = +data;
         let OrderNum = "BMC" + date.format(data, 'YYYYMMDD').toString() + lastdate.toString();
-        let Form_Text = '用户' + UserName + ' 购买商品编号为； 订单编号为：' + OrderNum;
+        let Form_Text = '用户' + userInfo.Name + ' 购买商品编号为； 订单编号为：' + OrderNum;
         let sql = '';
         let totalScore = 0;
         for (let item of datas) {
@@ -372,9 +372,24 @@ const indexdao = {
                 1,
                 '用户购买商品赠送积分：${totalScore} '
             );
+
+            INSERT INTO shopmanage.s_message 
+                (
+                UId, 
+                Message_Type, 
+                Message_Text, 
+                State
+                )
+                VALUES
+                (
+                    ${UId},
+                    2,
+                    '用户购买商品赠送积分：${totalScore}',
+                    0
+                );
         UPDATE s_userinfo SET SumScore=SumScore+${totalScore} WHERE UId=${UId} ;`;
 
-        //  console.log(sql);
+        console.log(sql);
 
         db.connect(sql, [], (err, data) => {
             result = new Result();
@@ -465,7 +480,7 @@ const indexdao = {
 
 
     /*数据库收藏产品*/
-    userCollect(req,resp){
+    userCollect(req, resp) {
         let UId = req.body.UId;
         let PId = req.body.PId;
         console.log(req.body.UId);
@@ -494,7 +509,7 @@ const indexdao = {
 
 
     /*获取用户收藏产品ID*/
-    myPro(req,resp){
+    myPro(req, resp) {
         console.log(123)
         let UId = req.query.UId;
         console.log(req.query.UId);
@@ -522,7 +537,7 @@ const indexdao = {
     },
 
     /*展示收藏产品的图片路径*/
-    proSrc(req,resp){
+    proSrc(req, resp) {
         console.log(456)
         let PId = req.query.PId;
         // console.log(req.query.PId);
@@ -550,7 +565,7 @@ const indexdao = {
     },
 
     /*删除当前图片的ID*/
-    thePicId(req,resp){
+    thePicId(req, resp) {
         console.log(789)
         console.log(req);
         let Pro_Name = req.body.Pro_Name;
@@ -580,10 +595,10 @@ const indexdao = {
 
 
     /*删除收藏产品*/
-    deletePro(req,resp){
+    deletePro(req, resp) {
         console.log(999)
         let PId = req.body.PId;
-        let UId= req.body.UId;
+        let UId = req.body.UId;
         // console.log(req.query.PId);
 
         let sql = `delete from s_collect_share_detail where PId=${PId} and UId=${UId}`;
