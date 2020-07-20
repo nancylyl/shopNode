@@ -3,10 +3,10 @@ const mysql = require("mysql");
 const dbpool = {
     pool: {},
     config: {
-        host: "localhost",
+        host: "172.16.2.42",
         port: "3306",
         user: "root",
-        password: "root",
+        password: "123456",
         database: "shopmanage",
         multipleStatements: true
     },
