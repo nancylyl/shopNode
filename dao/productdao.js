@@ -117,7 +117,7 @@ const indexdao = {
             }
 
             sql = sql + where;
-            console.log(sortName);
+            // console.log(sortName);
 
             if (sortName != '' && sortName != undefined) {
                 sql += ` order by ${sortName}  ${orderby}`
@@ -437,10 +437,10 @@ const indexdao = {
     getProductComment(res, resp) {
         let Pro_Id = res.query.Pro_Id;
         let sql = `
-        SELECT t1.*,t3.* FROM S_CommentDetail t1 
+        SELECT distinct t1.*,t3.* FROM S_CommentDetail t1 
         JOIN s_orderdetail t2 ON t2.ordernum=t1.oid
         JOIN s_userinfo t3 ON t3.uid=t2.uid
-       WHERE  t2.Pid=${Pro_Id}
+       WHERE  t1.Pid=${Pro_Id}
  
         `
         db.connect(sql, [], async(err, data) => {
