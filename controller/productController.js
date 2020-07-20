@@ -30,6 +30,8 @@ const userController = {
         dao.getProductComment(res, resp);
     },
 
+
+
     /*收藏产品*/
     collect(req, resp) {
         dao.userCollect(req, resp);
@@ -46,9 +48,9 @@ const userController = {
     },
 
     /*删除收藏产品的ID*/
-    thePicId(req, resp) {
+    /*thePicId(req, resp) {
         dao.thePicId(req, resp);
-    },
+    },*/
 
     /*删除收藏产品*/
     deletePro(req, resp) {
