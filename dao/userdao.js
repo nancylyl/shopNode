@@ -137,8 +137,6 @@ const indexdao = {
         const Code = req.body.Code;
 
         let Birthday = a.substring(0,10);
-
-        let Birthday1 = a.substring(0, 10);
         let userInfo = com.getUserSession(req, resp);
         let UId = userInfo.data.UId;
         let sql = ` UPDATE  S_UserInfo SET NAME='${Name}' ,Sex=${Sex} ,Birthday='${Birthday}',CODE='${Code}' WHERE UId=${UId} `
