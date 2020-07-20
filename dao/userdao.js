@@ -306,7 +306,22 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
             }
         });
     },
-
+    //我的消息列表
+    deleteMyMessage(req, resp) {
+        let message_Id = req.query.message_Id;
+        // console.log(req);
+        let sql = ` delete FROM S_Message  WHERE Message_Id=${message_Id} `
+        console.log(sql);
+        db.connect(sql, [], (err, data) => {
+            result = new Result();
+            if (err == null) {
+                result.success = true; //返回成功
+                result.data = data;
+                result.message = "" //成功描述
+                resp.send(result)
+            }
+        });
+    },
     // //我的有货信息
     // getMyAddress(req, resp) {
     //     let userInfo = com.getUserSession(req, resp);
@@ -392,11 +407,12 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
         const Tel = req.body.Tel;
         const Is_True = req.body.Is_True;
         const Id = req.body.Id;
-        let sql;
-        if (Is_True) {
+
+        let sql = '';
+        if (Is_True == 1) {
             sql = `update s_address set Is_True=0 where UId=${UId};`;
         }
-        sql = ` update s_address set
+        sql += ` update s_address set
                     S_Name= '${S_Name}', 
                     Province= '${Province}', 
                     City='${City}', 
@@ -404,7 +420,7 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
                     Address= '${Address}', 
                     Mail='${Mail}', 
                     Phone= '${Phone}', 
-                    Tel= '${Tel}', 
+                    Tel= '${Tel}', +
                     Is_True=  ${Is_True}
                     where Id= ${Id}
                     `
@@ -530,16 +546,10 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
         let sql = `
         
 
-SELECT /*t1.Pid,*/t1.OId,t3.pro_url,t2.pro_name,t2.price,t1.Star,t1.Content FROM S_CommentDetail t1
-JOIN S_Product t2 ON t1.PId= t2.Pro_Id
- LEFT JOIN 
- (
-   SELECT * FROM S_ProductPic WHERE id IN(
-        SELECT MIN(id) FROM S_ProductPic WHERE TYPE=3 GROUP BY Pro_Id
-    )
- )t3 ON t3.Pro_Id=t2.Pro_Id
- 
- JOIN  S_OrderDetail t4 ON  t4.OrderNum=t1.OId WHERE t4.UId=${UId}
+        SELECT  DISTINCT t1.OId,Star,Content,t1.createdate FROM S_CommentDetail t1
+        JOIN S_OrderDetail t2 ON t1.OId=t2.ordernum
+       WHERE t2.UId=${UId}
+       
  
           `
         console.log(sql);
