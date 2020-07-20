@@ -79,7 +79,7 @@ const indexdao = {
 
         // let sql = `INSERT INTO s_userinfo (Account,PASSWORD,Phone) VALUES('${Phone}','${PassWord}','${Phone}')`
 
-            // console.log(sql);
+        // console.log(sql);
         db.connect(sql, [], (err, data) => {
 
             // console.log(err);
@@ -136,7 +136,7 @@ const indexdao = {
         const a = req.body.Birthday;
         const Code = req.body.Code;
 
-        let Birthday = a.substring(0,10);
+        let Birthday = a.substring(0, 10);
         let userInfo = com.getUserSession(req, resp);
         let UId = userInfo.data.UId;
         let sql = ` UPDATE  S_UserInfo SET NAME='${Name}' ,Sex=${Sex} ,Birthday='${Birthday}',CODE='${Code}' WHERE UId=${UId} `
@@ -151,8 +151,8 @@ const indexdao = {
             }
         });
     },
-    newPhone(req, resp){
-        const Phone=req.body.Phone;
+    newPhone(req, resp) {
+        const Phone = req.body.Phone;
         let userInfo = com.getUserSession(req, resp);
         let UId = userInfo.data.UId;
         let sql = ` UPDATE  s_userinfo SET Phone='${Phone}' WHERE UId=${UId} `
@@ -215,7 +215,7 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
                 result.data = data;
                 result.message = "查询用户评论成功" //成功描述
                 resp.send(result)
-            }else {
+            } else {
                 result.message = "查询用户评论失败" //成功描述
                 resp.send(result)
             }
@@ -240,7 +240,7 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
     },
 
     //发票信息
-    getUserINV(req,resp){
+    getUserINV(req, resp) {
         let userInfo = com.getUserSession(req, resp);
         let UId = userInfo.data.UId;
         let sql = ` SELECT * FROM S_UserInfo  WHERE UId=${UId} `
@@ -266,11 +266,11 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
     updataUserINV(req, resp) {
         const InvoiceType = req.body.InvoiceType;
         const Inv_Content = req.body.Inv_Content;
-        const InvContentTypef=req.body.InvContentTypef;
+        const InvContentTypef = req.body.InvContentTypef;
         let userInfo = com.getUserSession(req, resp);
         let UId = userInfo.data.UId;
         let sql = ` UPDATE  S_UserInfo SET InvoiceType='${InvoiceType}' ,Inv_Content='${Inv_Content}' ,InvContentTypef='${InvContentTypef}'  WHERE UId=${UId} `
-            console.log(sql);
+        console.log(sql);
         console.log(sql);
         db.connect(sql, [], (err, data) => {
             result = new Result();
@@ -523,7 +523,7 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
 
 
     /*个人中心--我的评论*/
-    getUserComment(req,resp){
+    getUserComment(req, resp) {
         let userInfo = com.getUserSession(req, resp);
         let UId = userInfo.data.UId;
         let sql = `
@@ -554,7 +554,7 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
                 result.data = data;
                 result.message = "查询用户评论成功" //成功描述
                 resp.send(result)
-            }else {
+            } else {
                 result.message = "查询用户评论失败" //成功描述
                 resp.send(result)
             }
