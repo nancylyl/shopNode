@@ -5,15 +5,16 @@ const commondao = {
 
     getUserSession(req, resp) {
         const userInfo = req.session.userInfo;
-
-
+        // console.log(userInfo);
         result = new Result();
         if (userInfo != null) {
             result.data = userInfo;
             return result;
         } else {
+
             result.success = false;
             result.message = "您还没有登录，请先登录！"
+            console.log(result);
             resp.send(result)
         }
 

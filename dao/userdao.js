@@ -11,7 +11,7 @@ const indexdao = {
         const PassWord = req.body.PassWord;
 
         let sql = `SELECT * FROM  s_userinfo WHERE  account='${Account}' AND PASSWORD='${PassWord}'`
-        console.log(sql);
+            //console.log(sql);
         db.connect(sql, [], (err, data) => {
             result = new Result();
             if (err == null) {
@@ -24,7 +24,7 @@ const indexdao = {
                         //  req.session.userinfo = userinfo[0];
                         //  result.data = userinfo[0];
                     req.session.userInfo = data[0];
-                    console.log(data[0]);
+                    //console.log(data[0]);
                     // console.log(JSON.stringify(data, null, 2));
 
                     result.data = data[0];
@@ -116,7 +116,7 @@ const indexdao = {
         }
         let UId = userInfo.data.UId;
         let sql = `SELECT * FROM  s_userinfo WHERE  UId=${UId}`
-        console.log(sql);
+            // console.log(sql);
 
         db.connect(sql, [], (err, data) => {
             result = new Result();
@@ -140,7 +140,7 @@ const indexdao = {
         let userInfo = com.getUserSession(req, resp);
         let UId = userInfo.data.UId;
         let sql = ` UPDATE  S_UserInfo SET NAME='${Name}' ,Sex=${Sex} ,Birthday='${Birthday}',CODE='${Code}' WHERE UId=${UId} `
-        console.log(sql);
+            //   console.log(sql);
         db.connect(sql, [], (err, data) => {
             result = new Result();
             if (err == null) {
@@ -156,7 +156,7 @@ const indexdao = {
         let userInfo = com.getUserSession(req, resp);
         let UId = userInfo.data.UId;
         let sql = ` UPDATE  s_userinfo SET Phone='${Phone}' WHERE UId=${UId} `
-        console.log(sql)
+            //  console.log(sql)
         db.connect(sql, [], (err, data) => {
             result = new Result();
             if (err == null) {
@@ -172,7 +172,7 @@ const indexdao = {
         let userInfo = com.getUserSession(req, resp);
         let UId = userInfo.data.UId;
         let sql = ` UPDATE  S_UserInfo SET PassWord='${PassWord}' WHERE UId=${UId} `
-        console.log(sql);
+            //  console.log(sql);
         db.connect(sql, [], (err, data) => {
             result = new Result();
             if (err == null) {
@@ -245,7 +245,7 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
         let userInfo = com.getUserSession(req, resp);
         let UId = userInfo.data.UId;
         let sql = ` SELECT * FROM S_UserInfo  WHERE UId=${UId} `
-        console.log(sql)
+            //console.log(sql)
         db.connect(sql, [], (err, data) => {
             result = new Result();
             if (err == null) {
@@ -271,8 +271,7 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
         let userInfo = com.getUserSession(req, resp);
         let UId = userInfo.data.UId;
         let sql = ` UPDATE  S_UserInfo SET InvoiceType='${InvoiceType}' ,Inv_Content='${Inv_Content}' ,InvContentTypef='${InvContentTypef}'  WHERE UId=${UId} `
-        console.log(sql);
-        console.log(sql);
+
         db.connect(sql, [], (err, data) => {
             result = new Result();
             if (err == null) {
@@ -294,7 +293,7 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
         let UId = userInfo.data.UId;
         let sql = ` SELECT *,
     CASE Message_Type WHEN 1  THEN '活动通知' WHEN  2 THEN '优惠券发放' WHEN 3  THEN '积分变动' ELSE '其它' END Message
-    FROM S_Message  WHERE UId=${UId} `
+    FROM S_Message  WHERE UId=${UId} order by Message_Time desc `
             //  console.log(sql);
         db.connect(sql, [], (err, data) => {
             result = new Result();
@@ -311,7 +310,7 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
         let message_Id = req.query.message_Id;
         // console.log(req);
         let sql = ` delete FROM S_Message  WHERE Message_Id=${message_Id} `
-        console.log(sql);
+            //console.log(sql);
         db.connect(sql, [], (err, data) => {
             result = new Result();
             if (err == null) {
@@ -346,7 +345,7 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
         let userInfo = com.getUserSession(req, resp);
         let UId = userInfo.data.UId;
         let sql = ` SELECT * FROM s_address WHERE  UId=${UId} `;
-        console.log(sql)
+        //  console.log(sql)
         db.connect(sql, [], (err, data) => {
             result = new Result();
             if (err == null) {
@@ -361,9 +360,9 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
     addMyAddress(req, resp) {
         const S_Name = req.body.S_Name;
         const Province = req.body.Province;
-        console.log(Province);
+        //  console.log(Province);
         const City = req.body.City;
-        console.log(typeof City)
+        //  console.log(typeof City)
         const Area = req.body.Area;
         const Address = req.body.Address;
         const Mail = req.body.Mail;
@@ -381,8 +380,7 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
         sql = `INSERT INTO s_address (UId,S_Name,Province,City,Area,Address,Mail,Phone,Tel,Is_True) VALUES(${UId},'${S_Name}','${Province}','${City}','${Area}','${Address}','${Mail}','${Phone}','${Tel}',${Is_True})`;
 
         db.connect(sql, [], (err, data) => {
-            console.log(err)
-            console.log(123)
+
             result = new Result();
             if (err != null) {
 
@@ -425,7 +423,7 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
                     where Id= ${Id}
                     `
 
-        console.log(sql)
+
         db.connect(sql, [], (err, data) => {
             result = new Result();
             if (err == null) {
@@ -440,7 +438,7 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
     delMyAddress(req, resp) {
         let Id = req.body.Id;
         let sql = ` delete from  s_address WHERE  Id=${Id}`
-        console.log(sql)
+
         db.connect(sql, [], (err, data) => {
             result = new Result();
             if (err == null) {
@@ -527,7 +525,7 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
 
                 resp.send(result)
             } else {
-                console.log(err);
+                //console.log(err);
                 result.message = "查询失败！"
                 resp.send(result)
 
@@ -549,7 +547,7 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
         let UId = userInfo.data.UId;
         let sql = ` SELECT *,
 CASE SourceTypeID WHEN 1  THEN '购买产品' WHEN  2 THEN '评论' WHEN 3  THEN '注册' ELSE '其它' END Message
-FROM S_IntegralDetail  WHERE UId=${UId} `
+FROM S_IntegralDetail  WHERE UId=${UId} order by CreateDate desc `
             //  console.log(sql);
         db.connect(sql, [], (err, data) => {
             result = new Result();
@@ -570,11 +568,8 @@ FROM S_IntegralDetail  WHERE UId=${UId} `
 
         SELECT  DISTINCT t1.OId,Star,Content,t1.createdate FROM S_CommentDetail t1
         JOIN S_OrderDetail t2 ON t1.OId=t2.ordernum
-       WHERE t2.UId=${UId}
-       
- 
-          `
-        console.log(sql);
+       WHERE t2.UId=${UId} order by t1.CreateDate desc `
+
         db.connect(sql, [], (err, data) => {
             result = new Result();
             if (err == null) {
