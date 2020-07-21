@@ -418,12 +418,12 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
                     Address= '${Address}', 
                     Mail='${Mail}', 
                     Phone= '${Phone}', 
-                    Tel= '${Tel}', +
+                    Tel= '${Tel}', 
                     Is_True=  ${Is_True}
                     where Id= ${Id}
                     `
 
-
+        console.log(sql);
         db.connect(sql, [], (err, data) => {
             result = new Result();
             if (err == null) {
@@ -567,7 +567,7 @@ FROM S_IntegralDetail  WHERE UId=${UId} order by CreateDate desc `
         let sql = `
         
 
-<<<<<<< HEAD
+
         SELECT  DISTINCT t1.OId,Star,Content/*,t1.createdate*/ FROM S_CommentDetail t1
         JOIN S_OrderDetail t2 ON t1.OId=t2.OrderNum
        WHERE t2.UId=${UId}
@@ -575,12 +575,12 @@ FROM S_IntegralDetail  WHERE UId=${UId} order by CreateDate desc `
  
           `
         console.log(sql);
-=======
-        SELECT  DISTINCT t1.OId,Star,Content,t1.createdate FROM S_CommentDetail t1
-        JOIN S_OrderDetail t2 ON t1.OId=t2.ordernum
-       WHERE t2.UId=${UId} order by t1.CreateDate desc `
 
->>>>>>> e5fd8e5d80a7ec92ea25f1c301d684bbf0f7b41a
+        /*SELECT  DISTINCT t1.OId,Star,Content,t1.createdate FROM S_CommentDetail t1
+        JOIN S_OrderDetail t2 ON t1.OId=t2.ordernum
+       WHERE t2.UId=${UId} order by t1.CreateDate desc `*/
+
+
         db.connect(sql, [], (err, data) => {
             result = new Result();
             if (err == null) {
