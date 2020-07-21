@@ -140,7 +140,7 @@ const indexdao = {
         let Birthday = a.substring(0, 10);
         let userInfo = com.getUserSession(req, resp);
         let UId = userInfo.data.UId;
-        let sql = ` UPDATE  S_UserInfo SET NAME='${Name}' ,Sex=${Sex} ,Birthday='${Birthday}',CODE='${Code}' WHERE UId=${UId} `
+        let sql = ` UPDATE  S_UserInfo SET NAME='${Name}' ,Sex=${Sex} ,Birthday='${Birthday}',CODE='${Code}' WHERE UId=${UId}; `
             //   console.log(sql);
         db.connect(sql, [], (err, data) => {
             result = new Result();
