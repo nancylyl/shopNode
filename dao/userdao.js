@@ -377,7 +377,7 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
             sql = `update s_address set Is_True=0 where UId=${UId}`;
         }
 
-        sql = `INSERT INTO s_address (UId,S_Name,Province,City,Area,Address,Mail,Phone,Tel,Is_True) VALUES(${UId},'${S_Name}','${Province}','${City}','${Area}','${Address}','${Mail}','${Phone}','${Tel}',${Is_True})`;
+        sql += `INSERT INTO s_address (UId,S_Name,Province,City,Area,Address,Mail,Phone,Tel,Is_True) VALUES(${UId},'${S_Name}','${Province}','${City}','${Area}','${Address}','${Mail}','${Phone}','${Tel}',${Is_True})`;
 
         db.connect(sql, [], (err, data) => {
 
