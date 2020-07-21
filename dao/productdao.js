@@ -428,7 +428,7 @@ order by t1.CreateDate desc
                 ${UId},
                 '${OrderNum}',
                 1,
-                '购买商品抵扣积分：-${dkScore}分，抵扣金额为:${dkMoney}',
+                '购买商品抵扣积分：-${dkScore}分，抵扣金额为:${dkMoney}元',
                ${dkScore}
                 
             );

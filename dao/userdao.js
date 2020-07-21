@@ -63,7 +63,7 @@ const indexdao = {
         const Password = req.body.PassWord;
         let sql = `INSERT INTO s_userinfo (Account,PASSWORD,Phone) VALUES('${Phone}','${Password}','${Phone}');`
 
-        const PassWord = req.body.PassWord;
+        // const PassWord = req.body.PassWord;
         result = new Result();
 
         let userinfo = await this.IsExitName(Phone);
@@ -294,21 +294,16 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
             resp.send(result)
         }
         let UId = userInfo.data.UId;
-        let currentPage = req.query.currentPage;
-        let pageSize = req.query.pageSize;
-        console.log(req.query);
         let sql = ` SELECT *,
     CASE Message_Type WHEN 1  THEN '活动通知' WHEN  2 THEN '优惠券发放' WHEN 3  THEN '积分变动' ELSE '其它' END Message
     FROM S_Message  WHERE UId=${UId} order by Message_Time desc `
-        console.log(sql);
-        db.connectPage(sql, [], pageSize, currentPage, (err, data) => {
+            //  console.log(sql);
+        db.connect(sql, [], (err, data) => {
             result = new Result();
             if (err == null) {
                 result.success = true; //返回成功
-                result.total = data[0][0].count;
-                result.data = data[1];
+                result.data = data;
                 result.message = "" //成功描述
-                console.log(data[0]);
                 resp.send(result)
             }
         });
@@ -547,8 +542,6 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
     //我的积分
     getMyIntegralDetail(req, resp) {
         let userInfo = com.getUserSession(req, resp);
-        let currentPage = req.query.currentPage;
-        let pageSize = req.query.pageSize;
         result = new Result();
         if (userInfo == null) {
             result.message = "您还没有登录" //成功描述
@@ -557,14 +550,13 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
         let UId = userInfo.data.UId;
         let sql = ` SELECT *,
 CASE SourceTypeID WHEN 1  THEN '购买产品' WHEN  2 THEN '评论' WHEN 3  THEN '注册' ELSE '其它' END Message
-FROM S_IntegralDetail  WHERE UId=${UId} and score!=0 order by CreateDate desc `
+FROM S_IntegralDetail  WHERE UId=${UId} order by CreateDate desc `
             //  console.log(sql);
-        db.connectPage(sql, [], pageSize, currentPage, (err, data) => {
+        db.connect(sql, [], (err, data) => {
             result = new Result();
             if (err == null) {
                 result.success = true; //返回成功
-                result.data = data[1];
-                result.total = data[0][0].count;
+                result.data = data;
                 result.message = "" //成功描述
                 resp.send(result)
             }
@@ -574,16 +566,25 @@ FROM S_IntegralDetail  WHERE UId=${UId} and score!=0 order by CreateDate desc `
     getUserComment(req, resp) {
         let userInfo = com.getUserSession(req, resp);
         let UId = userInfo.data.UId;
-        let currentPage = req.query.currentPage;
-        let pageSize = req.query.pageSize;
+        console.log(UId);
         let sql = `
+        
+
+
         SELECT  DISTINCT t1.OId,Star,Content,date_format(t1.CreateDate, '%Y-%m-%d %H:%i:%s') CreateDate   FROM S_CommentDetail t1
         JOIN S_OrderDetail t2 ON t1.OId=t2.OrderNum
        WHERE t2.UId=${UId}
        ORDER BY CreateDate desc
  
           `
-        db.connectPage(sql, [], pageSize, currentPage, (err, data) => {
+        console.log(sql);
+
+        /*SELECT  DISTINCT t1.OId,Star,Content,t1.createdate FROM S_CommentDetail t1
+        JOIN S_OrderDetail t2 ON t1.OId=t2.ordernum
+       WHERE t2.UId=${UId} order by t1.CreateDate desc `*/
+
+
+        db.connect(sql, [], (err, data) => {
             result = new Result();
             if (err == null) {
                 result.success = true; //返回成功
@@ -593,9 +594,7 @@ FROM S_IntegralDetail  WHERE UId=${UId} and score!=0 order by CreateDate desc `
                     const returnMess = await that.getCommentImages(item.CId);
                     data[i].children = returnMess.data;
                 }*/
-                console.log(data);
-                result.data = data[1];
-                result.total = data[0][0].count;
+                result.data = data;
                 result.message = "查询用户评论成功" //成功描述
                 resp.send(result)
             } else {
