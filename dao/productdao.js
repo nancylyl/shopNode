@@ -380,7 +380,8 @@ order by t1.CreateDate desc
             );
         UPDATE 	S_Product SET Pro_NewCount=Pro_NewCount-1 WHERE Pro_Id=${item.PId}; `;
         }
-        sql += ` INSERT INTO s_integraldetail 
+        if (totalScore > 0) {
+            sql += ` INSERT INTO s_integraldetail 
             (
                 UId,
                 SourceID,
@@ -394,7 +395,7 @@ order by t1.CreateDate desc
                 '${OrderNum}',
                 1,
                 '用户购买商品赠送积分：${totalScore} ',
-                ${dkScore}
+                ${totalScore}
             );
 
             INSERT INTO shopmanage.s_message 
@@ -410,9 +411,8 @@ order by t1.CreateDate desc
                     2,
                     '用户购买商品赠送积分：${totalScore}',
                     0
-                );
-    `;
-
+                ); `;
+        }
         if (dkScore > 0) {
 
             sql += `INSERT INTO s_integraldetail 
@@ -481,12 +481,38 @@ order by t1.CreateDate desc
         let sql = '';
         if (state == 1) {
             sql = `UPDATE  s_userinfo SET SumScore=SumScore+(
-                SELECT  t2.Score FROM s_orderdetail t1 
+                SELECT  SUM(t2.Score) FROM s_orderdetail t1 
                 JOIN s_product t2 ON t2.Pro_Id=t1.PId
                 WHERE t1.OrderNum='${orderNum}')
                 WHERE UId=${UId} ; `;
         }
-        sql += ` UPDATE s_orderdetail SET state=${state} WHERE OrderNum='${orderNum}' `;
+        sql += ` UPDATE s_orderdetail SET state=${state} WHERE OrderNum='${orderNum}'; `;
+        if (state == 12) {
+            sql += ` UPDATE  s_orderdetail t1 
+            JOIN s_product t2 ON t2.Pro_Id=t1.PId
+             SET t2.Pro_NewCount=t2.Pro_NewCount+t1.Num 
+            WHERE   UId=${UId}  AND  t1.OrderNum='${orderNum}';
+             `
+            sql += `UPDATE  s_userinfo SET SumScore=SumScore-(
+                SELECT  SUM(t2.Score) FROM s_orderdetail t1 
+                JOIN s_product t2 ON t2.Pro_Id=t1.PId
+                WHERE t1.OrderNum='${orderNum}')
+                WHERE UId=${UId} ; `
+                /* 退还积分 */
+            sql += ` INSERT INTO s_integraldetail 
+                (
+                    UId,
+                    SourceID,
+                    SourceTypeID,
+                    Content,
+                    Score
+                )
+                SELECT  UId,SourceID,SourceTypeID,CONCAT('用户退款退还积分:',Score) AS Content,(Score*-1) Score
+                FROM  s_integraldetail
+                WHERE SourceID='${orderNum}';`
+
+        }
+
         //console.log(sql);
 
         db.connect(sql, [], (err, data) => {

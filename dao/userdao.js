@@ -191,7 +191,9 @@ const indexdao = {
         let sql = `
         
 
-SELECT /*t1.Pid,*/t1.OId,t3.pro_url,t2.pro_name,t2.price,t1.Star,t1.Content FROM S_CommentDetail t1
+SELECT /*t1.Pid,*/t1.OId,t3.pro_url,t2.pro_name,t2.price,t1.Star,t1.Content,
+date_format(t1.CreateDate, '%y%m%d %h:%i:%s')
+FROM S_CommentDetail t1
 JOIN S_Product t2 ON t1.PId= t2.Pro_Id
  LEFT JOIN 
  (
@@ -548,7 +550,7 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
         let UId = userInfo.data.UId;
         let sql = ` SELECT *,
 CASE SourceTypeID WHEN 1  THEN '购买产品' WHEN  2 THEN '评论' WHEN 3  THEN '注册' ELSE '其它' END Message
-FROM S_IntegralDetail  WHERE UId=${UId} order by CreateDate desc `
+FROM S_IntegralDetail  WHERE UId=${UId} and score!=0 order by CreateDate desc `
             //  console.log(sql);
         db.connect(sql, [], (err, data) => {
             result = new Result();
@@ -569,10 +571,10 @@ FROM S_IntegralDetail  WHERE UId=${UId} order by CreateDate desc `
         
 
 
-        SELECT  DISTINCT t1.OId,Star,Content/*,t1.createdate*/ FROM S_CommentDetail t1
+        SELECT  DISTINCT t1.OId,Star,Content,date_format(t1.CreateDate, '%Y-%m-%d %H:%i:%s') CreateDate   FROM S_CommentDetail t1
         JOIN S_OrderDetail t2 ON t1.OId=t2.OrderNum
        WHERE t2.UId=${UId}
-       
+       ORDER BY CreateDate desc
  
           `
         console.log(sql);
