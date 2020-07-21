@@ -543,10 +543,10 @@ order by t1.CreateDate desc
     userCollect(req, resp) {
         let UId = req.body.UId;
         let PId = req.body.PId;
-        console.log(req.body.UId);
+        //  console.log(req.body.UId);
 
         let sql = `insert into s_collect_share_detail (UId,PID) values('${UId}','${PId}')`;
-        console.log(sql);
+        //  console.log(sql);
         db.connect(sql, [], (err, data) => {
             result = new Result();
             if (err == null) {
@@ -572,10 +572,10 @@ order by t1.CreateDate desc
     myPro(req, resp) {
         console.log(123)
         let UId = req.query.UId;
-        console.log(req.query.UId);
+        //console.log(req.query.UId);
 
         let sql = `select PId from s_collect_share_detail where UId=${UId}`;
-        console.log(sql);
+        //  console.log(sql);
         db.connect(sql, [], (err, data) => {
             result = new Result();
             if (err == null) {
@@ -603,7 +603,7 @@ order by t1.CreateDate desc
         // console.log(req.query.PId);
 
         let sql = `select Pro_Url,(select Pro_Name from s_product where Pro_Id=${PId}) as Pro_Name,(select Price from s_product where Pro_Id=${PId}) as Price from s_productpic where Pro_Id=${PId} limit 1`;
-        console.log(sql);
+        //console.log(sql);
         db.connect(sql, [], (err, data) => {
             result = new Result();
             if (err == null) {
@@ -626,13 +626,12 @@ order by t1.CreateDate desc
 
     /*删除当前图片的ID*/
     thePicId(req, resp) {
-        console.log(789)
-        console.log(req);
+
         let Pro_Name = req.body.Pro_Name;
         // console.log(req.query.PId);
 
         let sql = `select Pro_Id from s_product where Pro_Name='${Pro_Name}'`;
-        console.log(sql);
+        //   console.log(sql);
         db.connect(sql, [], (err, data) => {
             result = new Result();
             if (err == null) {
@@ -662,7 +661,7 @@ order by t1.CreateDate desc
         // console.log(req.query.PId);
 
         let sql = `delete from s_collect_share_detail where PId=${PId} and UId=${UId}`;
-        console.log(sql);
+        //  console.log(sql);
         db.connect(sql, [], (err, data) => {
             result = new Result();
             if (err == null) {

@@ -11,7 +11,7 @@ const indexdao = {
         const PassWord = req.body.PassWord;
 
         let sql = `SELECT * FROM  s_userinfo WHERE  account='${Account}' AND PASSWORD='${PassWord}'`
-            //console.log(sql);
+        console.log(sql);
         db.connect(sql, [], (err, data) => {
             result = new Result();
             if (err == null) {
@@ -61,7 +61,7 @@ const indexdao = {
         const Phone = req.body.Phone;
 
         const Password = req.body.PassWord;
-        let sql = `INSERT INTO s_userinfo (Account,PASSWORD,Phone) VALUES('${Phone}','${Password}','${Phone}')`
+        let sql = `INSERT INTO s_userinfo (Account,PASSWORD,Phone) VALUES('${Phone}','${Password}','${Phone}');`
 
         const PassWord = req.body.PassWord;
         result = new Result();
@@ -85,6 +85,7 @@ const indexdao = {
             // console.log(err);
             if (err == null) {
                 // console.log(data);
+
                 result.success = true; //返回成功
                 result.message = "注册成功！" //成功描述
                 resp.send(result)
@@ -200,7 +201,7 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
  )t3 ON t3.Pro_Id=t2.Pro_Id
  
  JOIN  S_OrderDetail t4 ON  t4.OrderNum=t1.OId WHERE t4.UId=${UId}
- 
+ order by t1.CreateDate desc
           `
 
         db.connect(sql, [], async(err, data) => {
@@ -372,13 +373,13 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
         let userInfo = com.getUserSession(req, resp);
         let UId = userInfo.data.UId;
         // console.log(req.body)
-        let sql;
+        let sql = '';
         if (Is_True) {
-            sql = `update s_address set Is_True=0 where UId=${UId}`;
+            sql = ` update s_address set Is_True=0 where UId=${UId};`;
         }
 
         sql += `INSERT INTO s_address (UId,S_Name,Province,City,Area,Address,Mail,Phone,Tel,Is_True) VALUES(${UId},'${S_Name}','${Province}','${City}','${Area}','${Address}','${Mail}','${Phone}','${Tel}',${Is_True})`;
-
+        console.log(sql);
         db.connect(sql, [], (err, data) => {
 
             result = new Result();
