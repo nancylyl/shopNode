@@ -26,7 +26,7 @@ const dbpool = {
             var start = (currentPage - 1) * pageCount;
             var newsql = 'select count(*) count from (' + sql + ') a;SELECT * FROM (' + sql + ')  a limit ' + start + ',' + pageCount + ';'
             connection.query(newsql, arr, fn);
-            //    console.log(newsql);
+            console.log(newsql);
             connection.release();
         })
     }
