@@ -318,7 +318,8 @@ order by t1.CreateDate desc
         let totalScore = 0;
         for (let item of datas) {
             try {
-                totalScore = parseFloat(item.Score) * parseInt(item.Num);
+                totalScore += parseFloat(item.Score) * parseInt(item.Num);
+                console.log(parseFloat(item.Score), parseInt(item.Num));
 
             } catch (e) {
                 console.log(e);
@@ -454,7 +455,7 @@ order by t1.CreateDate desc
             dkScore = 0;
         }
         sql += `    UPDATE s_userinfo SET SumScore=SumScore+${totalScore}-${dkScore} WHERE UId=${UId} ;`
-        console.log(sql);
+            // console.log(sql);
 
         db.connect(sql, [], (err, data) => {
             result = new Result();
