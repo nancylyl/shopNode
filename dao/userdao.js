@@ -424,7 +424,7 @@ JOIN S_Product t2 ON t1.PId= t2.Pro_Id
                     where Id= ${Id}
                     `
 
-
+        console.log(sql);
         db.connect(sql, [], (err, data) => {
             result = new Result();
             if (err == null) {
@@ -564,12 +564,23 @@ FROM S_IntegralDetail  WHERE UId=${UId} order by CreateDate desc `
     getUserComment(req, resp) {
         let userInfo = com.getUserSession(req, resp);
         let UId = userInfo.data.UId;
+        console.log(UId);
         let sql = `
         
 
-        SELECT  DISTINCT t1.OId,Star,Content,t1.createdate FROM S_CommentDetail t1
+
+        SELECT  DISTINCT t1.OId,Star,Content/*,t1.createdate*/ FROM S_CommentDetail t1
+        JOIN S_OrderDetail t2 ON t1.OId=t2.OrderNum
+       WHERE t2.UId=${UId}
+       
+ 
+          `
+        console.log(sql);
+
+        /*SELECT  DISTINCT t1.OId,Star,Content,t1.createdate FROM S_CommentDetail t1
         JOIN S_OrderDetail t2 ON t1.OId=t2.ordernum
-       WHERE t2.UId=${UId} order by t1.CreateDate desc `
+       WHERE t2.UId=${UId} order by t1.CreateDate desc `*/
+
 
         db.connect(sql, [], (err, data) => {
             result = new Result();
