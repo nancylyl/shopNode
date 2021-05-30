@@ -27,7 +27,7 @@
     "mysql": "^2.18.1",
     "serve-favicon": "^2.5.0",
     "silly-datetime": "^0.1.2",
-    "ws": "^7.3.0"
+    "ws": "^7.4.6"
   },
   "devDependencies": {
     "express-session": "^1.17.1",
